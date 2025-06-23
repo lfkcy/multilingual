@@ -1,0 +1,7 @@
+{
+    "exec": "ts-node index.ts --langs test",
+    "watch": [
+        "*.ts"
+    ],
+    "ext": "ts,json"
+}

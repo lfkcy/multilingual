@@ -1,0 +1,23 @@
+{
+  "name": "i18n-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon --exec ts-node index.ts --langs es,de,fr,pt,it,ja,th,pl,ko,ru,da,nb,nl,id,tw,zh,tr"
+  },
+  "dependencies": {
+    "@google/genai": "^0.13.0",
+    "@types/node": "^22.15.3",
+    "commander": "^13.1.0",
+    "fs": "^0.0.1-security",
+    "https-proxy-agent": "^7.0.6",
+    "node-fetch": "^3.3.2",
+    "nodemon": "^3.1.10",
+    "p-limit": "^6.2.0",
+    "path": "^0.12.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "undici": "^7.9.0"
+  }
+}
