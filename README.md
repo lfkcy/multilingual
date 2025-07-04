@@ -1,2 +1,248 @@
 # multilingual
-Multilingual translation tool
+
+多语言翻译管理工具
+
+---
+
+## 目录
+- [项目简介](#项目简介)
+- [主要特性](#主要特性)
+- [依赖说明](#依赖说明)
+- [快速开始](#快速开始)
+- [环境变量配置](#环境变量配置)
+- [目录结构](#目录结构)
+- [多语言版本号机制说明](#多语言版本号机制说明)
+- [缓存与锁机制说明](#缓存与锁机制说明)
+- [OSS 云存储说明](#oss-云存储说明)
+- [工具函数说明（util/）](#工具函数说明util)
+- [API 说明](#api-说明)
+- [常见问题（FAQ）](#常见问题faq)
+- [贡献指南](#贡献指南)
+- [安全与最佳实践](#安全与最佳实践)
+
+---
+
+## 项目简介
+本项目用于管理和分发多语言 JSON 文件，支持语言文件的上传、下载、查询和更新，适合中小型项目多语言翻译管理。**支持多语言版本号管理，每次同步/上传都会生成唯一的版本目录，历史版本可追溯。**
+
+## 主要特性
+- 支持多语言 JSON 文件的增删查改
+- 提供 RESTful API 接口
+- 兼容多种前端/后端集成
+- **自动同步**：上传/更新 en.json 时，自动对比 en_stable.json 并同步所有其他语言
+- **手动同步**：支持接口手动触发多语言同步
+- **多语言版本管理**：每次同步/上传都会生成唯一的版本目录，支持历史版本回溯与管理
+- **OSS 云存储**：所有语言文件存储于阿里云 OSS，支持大规模分发
+- **智能翻译**：集成 Google Gemini API，自动翻译并缓存结果，支持多密钥轮询
+- **缓存与进度管理**：本地缓存翻译结果与进度，断点续传
+- **文件锁机制**：多进程/多请求下保证同步任务安全
+
+## 依赖说明
+主要依赖如下：
+- `express`、`body-parser`、`cors`、`express-fileupload`：API 服务与文件上传
+- `ali-oss`：阿里云 OSS 文件操作
+- `@google/genai`、`undici`：Google Gemini 智能翻译
+- `p-limit`：并发控制
+- `typescript`、`ts-node`：TypeScript 支持
+- 详见 `package.json`
+
+## 快速开始
+
+### 1. 安装依赖
+```bash
+npm install
+```
+
+### 2. 配置环境变量
+请参考 [环境变量配置](#环境变量配置) 部分，配置 OSS 及 Gemini API Key。
+
+### 3. 启动开发/生产环境
+```bash
+npm run dev      # 开发模式，自动重载
+npm run build    # 编译 TypeScript（如需）
+npm start        # 启动服务（如配置）
+```
+或直接：
+```bash
+ts-node server.ts
+```
+
+## 环境变量配置
+请在根目录下新建 `.env` 或 `.env.production` 文件，示例：
+```ini
+NODE_ENV=development  # 或 production
+PORT=8888            # 服务端口
+
+OSS_ACCESS_KEY_ID=xxx
+OSS_ACCESS_KEY_SECRET=xxx
+OSS_BUCKET=your-bucket
+OSS_REGION=oss-cn-xxx
+
+# Google Gemini API Key（支持多密钥，逗号分隔）
+GEMINI_API_KEYS=key1,key2,key3
+```
+- OSS 相关参数请在阿里云控制台获取。
+- GEMINI_API_KEYS 支持配置多个密钥，提升并发和稳定性。
+- 建议所有敏感信息仅通过环境变量传递。
+
+## 目录结构
+```
+├── lang/            # 存放各语言 JSON 文件（OSS 同步）--- 测试使用
+├── routes/          # 路由定义
+│   └── i18n.ts      # 多语言相关接口
+├── util/            # 工具函数与核心逻辑
+│   ├── index.ts         # JSON 拍平/展开、锁机制等
+│   ├── oss.ts           # OSS 工具
+│   ├── translator.ts    # Gemini 智能翻译与缓存
+│   ├── logger.ts        # 日志工具
+│   ├── syncI18n.ts      # 多语言同步主逻辑（核心）
+│   ├── runI18nSync.ts   # 同步子进程入口（仅调用 syncI18n）
+│   ├── versioning.ts    # 版本号生成工具
+│   ├── .sync_lock # 文件锁
+├── cache/           # 翻译缓存与进度
+│   ├── translation_cache.json      # 翻译缓存
+│   ├── translation_progress.json   # 翻译进度
+├── server.ts        # 服务入口
+├── package.json     # 项目依赖
+├── tsconfig.json    # TypeScript 配置
+└── README.md        # 项目说明
+```
+
+- **OSS 目录结构说明**：
+  - `assets/lang/` 下每次同步会生成一个以时间戳为名的子目录（如 `assets/lang/20250702144736/`），每个目录下存放该版本的所有语言文件。
+  - 便于历史版本回溯、灰度发布、回滚等场景。
+
+## 多语言版本号机制说明
+
+- **版本号生成**：每次同步/上传 en.json 时，系统会自动生成唯一的版本号，格式为 `YYYYMMDDHHmmss`（开发环境为本地时间，生产环境为 UTC 时间）。
+- **版本目录**：所有语言文件会被上传到 OSS 的 `assets/lang/{version}/` 目录下，便于历史版本管理。
+- **历史回溯**：可通过 OSS 管理后台或自定义接口获取历史版本的语言包，实现回滚或比对。
+- **版本号生成逻辑**：详见 `util/versioning.ts`，支持本地/UTC 时间切换。
+- **同步流程**：
+  1. 生成新版本号
+  2. 对比 en.json 是否有变化
+  3. 若有变化则同步所有语言，生成新版本目录
+  4. 上传所有语言文件到新版本目录
+
+## 缓存与锁机制说明
+- `cache/translation_cache.json`：缓存所有已翻译的文本对，加速重复翻译
+- `cache/translation_progress.json`：记录已完成的翻译任务及当前 API 密钥索引，支持断点续传
+- `util/sync_lock`：同步任务文件锁，防止多进程/多请求并发导致数据冲突
+
+## OSS 云存储说明
+- 配置见 `util/oss.ts`，所有语言文件统一存储于阿里云 OSS（`assets/lang/`）
+- **多版本目录结构**：每次同步/上传会在 `assets/lang/` 下生成新版本目录（如 `assets/lang/20250702144736/`），每个目录下存放该版本的所有语言文件。
+- 支持文件上传、覆盖、读取、批量列举等操作
+- **安全提示**：请勿将真实的 `accessKeyId` 和 `accessKeySecret` 直接暴露在生产环境，建议用环境变量或密钥服务管理
+
+## 工具函数说明（util/）
+- `index.ts`：
+  - `flatten/unflattenJSON`：JSON 拍平与还原，便于多语言 key 对齐
+  - `isJsonChanged`：判断 JSON 是否有变动
+  - `acquireLock/releaseLock`：文件锁，保证同步任务互斥
+- `oss.ts`：OSS 工具类，封装了文件上传、下载、列举等常用操作
+- `translator.ts`：Google Gemini 智能翻译，支持多密钥自动切换、缓存、进度断点
+- `logger.ts`：日志输出，记录每次多语言同步的新增、更新、删除项
+- `syncI18n.ts`：多语言同步主逻辑（核心实现，负责 en.json 变更时自动同步所有语言）
+- `runI18nSync.ts`：用于子进程执行多语言同步，仅作为 syncI18n 的调用入口，防止主进程阻塞
+- `versioning.ts`：版本号生成工具，支持本地/UTC 时间
+
+## API 说明
+
+### 获取所有语言文件列表
+- `GET /api/i18n/get-langs`
+- 返回：
+```json
+{
+  "code": 0,
+  "data": {
+    "count": 3,
+    "files": [
+      {"name": "en.json", "size": 1234, "lastModified": 1710000000000, "etag": "..."},
+      {"name": "zh.json", "size": 1234, "lastModified": 1710000000000, "etag": "..."}
+    ]
+  }
+}
+```
+
+### 获取指定语言 JSON 内容
+- `GET /api/i18n/get-lang?lang=xx`
+- 参数：`lang` 语言代码（如 en、zh、fr）
+- 可选参数：`version` 版本号（如不传则获取最新版本）
+- 返回：
+```json
+{
+  "code": 0,
+  "data": {
+    "hello": "你好",
+    "welcome": "欢迎"
+  }
+}
+```
+
+### 上传/更新指定语言 JSON 文件
+- `POST /api/i18n/update-lang`
+- form-data 上传，字段名为 `file`，文件名需为 `xx.json`
+- 若上传 `en.json`，会自动触发多语言同步，生成新版本目录
+- 返回：
+```json
+{
+  "code": 0,
+  "message": "上传成功，已自动同步其他语言"
+}
+```
+
+### 手动触发多语言同步
+- `POST /api/i18n/sync`
+- 返回：
+```json
+{
+  "code": 0,
+  "message": "同步任务已启动"
+}
+```
+
+## 自动/手动同步机制
+- 上传/更新 `en.json` 时，系统自动与 en_stable.json 对比，若有变化则同步所有其他语言（自动翻译并更新），并生成新版本目录
+- 其他语言上传/更新不会触发自动同步
+- 可通过 `/api/i18n/sync` 手动强制同步
+
+## 常见问题（FAQ）
+
+### 1. Gemini API Key 如何配置？
+- 推荐将多个 Key 用逗号分隔写入 `.env` 文件的 `GEMINI_API_KEYS` 变量。
+- 若未配置，默认使用 `util/translator.ts` 中硬编码的 Key（不推荐生产环境使用）。
+
+### 2. OSS 配置报错怎么办？
+- 检查 `.env` 文件中的 OSS 相关参数是否正确，建议不要硬编码在代码中。
+
+### 3. 如何扩展支持更多语言？
+- 只需上传新的 `xx.json` 文件即可，系统会自动管理。
+
+### 4. 翻译缓存和进度如何清理？
+- 删除 `cache/translation_cache.json` 和 `cache/translation_progress.json` 文件即可。
+
+### 5. 如何本地调试？
+- 推荐使用 `npm run dev`，并配置本地代理（如需 Gemini 访问）。
+
+### 6. 如何获取历史版本的语言包？
+- 可通过 OSS 管理后台手动下载，也可扩展接口支持按版本号获取（如 `get-lang?lang=xx&version=20250702144736`）。
+
+### 7. 版本号如何生成？
+- 由系统自动生成，格式为 `YYYYMMDDHHmmss`，详见 [多语言版本号机制说明](#多语言版本号机制说明)。
+
+## 贡献指南
+1. Fork 本仓库并新建分支。
+2. 提交 PR 前请确保通过所有测试。
+3. 建议补充注释和文档。
+4. 欢迎 issue 反馈和建议。
+
+## 安全与最佳实践
+- `.gitignore` 已默认忽略 `lang/`、`node_modules/` 等目录，防止大文件和敏感信息入库
+- OSS 密钥、Google API Key 等敏感信息请勿硬编码在生产环境
+- 建议使用 HTTPS 部署服务，保护接口安全
+- 推荐使用环境变量统一管理所有敏感信息
+
+---
+
+如有问题欢迎提交 issue 或 PR 共同完善本项目。

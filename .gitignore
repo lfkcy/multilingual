@@ -4,3 +4,7 @@ node_modules/
 # 忽略 lang 目录
 lang/
 
+# 忽略 env 文件
+.env
+.env.production
+

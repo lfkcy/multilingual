@@ -4,20 +4,35 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --exec ts-node index.ts --langs es,de,fr,pt,it,ja,th,pl,ko,ru,da,nb,nl,id,tw,zh,tr"
+    "dev": "ts-node server.ts"
   },
   "dependencies": {
-    "@google/genai": "^0.13.0",
-    "@types/node": "^22.15.3",
-    "commander": "^13.1.0",
+    "@google/genai": "^1.7.0",
+    "@types/ali-oss": "^6.16.11",
+    "@types/express-fileupload": "^1.5.1",
+    "ali-oss": "^6.23.0",
+    "body-parser": "^2.2.0",
+    "commander": "^14.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "express-fileupload": "^1.5.1",
     "fs": "^0.0.1-security",
     "https-proxy-agent": "^7.0.6",
     "node-fetch": "^3.3.2",
-    "nodemon": "^3.1.10",
     "p-limit": "^6.2.0",
     "path": "^0.12.7",
+    "undici": "^7.11.0"
+  },
+  "description": "Multilingual translation tool",
+  "keywords": [],
+  "author": "",
+  "devDependencies": {
+    "@types/body-parser": "^1.19.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
-    "undici": "^7.9.0"
+    "typescript": "^5.8.3"
   }
 }
