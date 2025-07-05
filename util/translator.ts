@@ -6,18 +6,18 @@ import * as path from "path";
 const isProduction = process.env.NODE_ENV === "production";
 
 // 如果非生产环境，则设置代理 --- 生产环境需部署在海外服务器
-if (!isProduction) {
-  // 设置你的代理地址，比如 Clash 的 HTTP 代理
-  const proxyAgent = new ProxyAgent(process.env.HTTP_PROXY || "http://127.0.0.1:7890");
+// if (!isProduction) {
+// 设置你的代理地址，比如 Clash 的 HTTP 代理
+const proxyAgent = new ProxyAgent(process.env.HTTP_PROXY || "http://127.0.0.1:7890");
 
-  // 重写全局 fetch（Gemini SDK 内部使用全局的 fetch）
-  globalThis.fetch = ((input: any, init?: any) => {
-    return undiciFetch(input, { ...init, dispatcher: proxyAgent });
-  }) as any;
-}
+// 重写全局 fetch（Gemini SDK 内部使用全局的 fetch）
+globalThis.fetch = ((input: any, init?: any) => {
+  return undiciFetch(input, { ...init, dispatcher: proxyAgent });
+}) as any;
+// }
 
 // API 密钥列表 
-const API_KEYS = process.env.GEMINI_API_KEYS?.split(',') || [];
+const API_KEYS = process.env.GEMINI_API_KEYS!.split(',') || [];
 
 // 缓存目录和文件路径
 const CACHE_DIR = "cache";

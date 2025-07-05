@@ -93,11 +93,10 @@ export async function run({
 
   // --- 4. 处理新增和修改的字段（触发翻译） ---
   let langFiles: string[] = [];
+  const allUpdatedLangContents: { [lang: string]: string } = {};// 用于暂存所有语言的更新内容，等待所有处理完成后再统一上传
 
   // 获取所有 lang 文件（排除 en/en_stable）
   try {
-    console.log(OSS_LATEST_LANG_DIR, "???");
-
     const res = await ossUtil.listJsonFilesInDirectory(OSS_LATEST_LANG_DIR);
     if (res) {
       langFiles = res.files
@@ -113,7 +112,7 @@ export async function run({
     return;
   }
 
-  const langs = langFiles.map((f) => f.replace(/\.json$/, ""));
+  const langs = langFiles.map((f) => f.replace(/\.json$/, "")); // 获取所有语言文件名
 
   console.log(langs, "langs");
 
@@ -199,13 +198,15 @@ export async function run({
     const prettyJson = JSON.stringify(updatedTargetLangJson, null, 2);
     logChanges(lang, changes);
 
-    try {
-      const ossPath = `${OSS_VERSIONED_LANG_DIR}${lang}.json`;
-      await ossUtil.uploadFile(ossPath, prettyJson);
-    } catch (error) {
-      console.error("上传目标语言文件失败", error);
-      throw error;
-    }
+    allUpdatedLangContents[lang] = prettyJson; // 将处理后的内容存储在内存中，不立即上传
+
+    // try {
+    //   const ossPath = `${OSS_VERSIONED_LANG_DIR}${lang}.json`;
+    //   await ossUtil.uploadFile(ossPath, prettyJson);
+    // } catch (error) {
+    //   console.error("上传目标语言文件失败", error);
+    //   throw error;
+    // }
 
     const endTime = new Date();
     console.log(
@@ -214,6 +215,25 @@ export async function run({
 结束时间: ${endTime.toLocaleString()}
 耗时: ${(endTime.getTime() - startTime.getTime()) / 1000}s`
     );
+  }
+
+  // --- 6. 统一上传所有处理完成的语言文件 ---
+  console.log(`\n☁️ 开始统一上传所有语言文件到 OSS 版本目录: ${currentVersion}`);
+  for (const lang of langs) {
+    const content = allUpdatedLangContents[lang]; // 同步后的语言
+    if (content) {
+      const ossPath = `${OSS_VERSIONED_LANG_DIR}${lang}.json`;
+      try {
+        await ossUtil.uploadFile(ossPath, content);
+        console.log(`✅ 已上传 ${lang}.json 到 ${ossPath}`);
+      } catch (error: any) {
+        console.error(`❌ 上传 ${lang}.json 失败到 ${ossPath}，错误：${error?.message || 'error'}`);
+        // 如果这里上传失败，根据严格原子性原则，应该回滚或抛出致命错误
+        throw error; // 严格中断，如果单个文件上传失败
+      }
+    } else {
+      console.warn(`⚠️ 未找到 ${lang} 的处理内容，跳过上传。`);
+    }
   }
 
   // --- 7. 更新 OSS 上传版本的 en.json ---
