@@ -8,3 +8,6 @@ lang/
 .env
 .env.production
 
+# 忽略 cache 目录
+cache/
+

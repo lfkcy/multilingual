@@ -76,13 +76,14 @@ export async function run({
   }
 
   // --- 3. 差异比对 ---
-  const flatEn = flatten(currentEnJsonContent); // 拍平后的英语
-  const flatEnOld = flatten(stableEnJsonContent); // 拍平后的旧英语
+  // 这里我们不再直接使用 flatten/unflatten 进行逐条对比，
+  // 而是会逐个顶层键进行 JSON 段的翻译和合并。
+  // 但是 `isJsonChanged` 仍然可以用来判断整体 en.json 是否需要处理。
+  const flatEn = flatten(currentEnJsonContent);
+  const flatEnOld = flatten(stableEnJsonContent);
 
-  // 判断 en.json 是否有变化
   const isChanged = isJsonChanged(flatEn, flatEnOld);
 
-  // 不生成新版本目录
   if (!isChanged) {
     console.log(
       "[syncI18n] en.json 与 en.stable.json 无任何变化，跳过多语言同步。"
@@ -120,61 +121,83 @@ export async function run({
     const startTime = new Date();
     console.log(`\n🚀 开始同步 [${lang}] ${startTime.toLocaleString()}`);
 
-    let json: string;
+    let targetLangJsonContent: Record<string, any>; // 目标语言 JSON 内容
     try {
-      json = await ossUtil.getFileContent(`${OSS_LATEST_LANG_DIR}${lang}.json`);
-      if (!json.trim()) {
-        // 防止 json 文件是空字符串
+      const jsonStr = await ossUtil.getFileContent(
+        `${OSS_LATEST_LANG_DIR}${lang}.json`
+      );
+      if (!jsonStr.trim()) {
         console.warn(`⚠️  ${lang}.json 是空文件，已使用空对象替代`);
-        json = "{}";
+        targetLangJsonContent = {};
+      } else {
+        targetLangJsonContent = JSON.parse(jsonStr);
       }
     } catch (err) {
       console.warn(`⚠️ 未找到 ${lang}.json 文件，已创建空对象替代`);
-      json = "{}";
+      targetLangJsonContent = {};
     }
 
-    const flatLang = flatten(JSON.parse(json)); // 拍平后的目标语言
-    const updatedLang: Record<string, string> = { ...flatLang }; // 用一个新对象来存储更新后的语言
-
+    const updatedTargetLangJson: Record<string, any> = { ...targetLangJsonContent }; // 更新后的目标语言 JSON 内容
     const changes = {
       added: [] as string[],
       updated: [] as string[],
       removed: [] as string[],
     };
 
-    for (const key in flatEn) {
-      const newValue = flatEn[key]; // 新语言(英语)
-      const enOldValue = flatEnOld[key]; // 旧语言(英语)
-      const langValue = flatLang[key]; // 目标语言
+    // 遍历 en.json 的顶层键，进行逐段翻译
+    for (const topLevelKey in currentEnJsonContent) {
+      if (Object.prototype.hasOwnProperty.call(currentEnJsonContent, topLevelKey)) {
+        const enSection = { [topLevelKey]: currentEnJsonContent[topLevelKey] }; // 提取当前顶层键对应的 JSON 片段
+        const enOldSection = { [topLevelKey]: stableEnJsonContent[topLevelKey] };
 
-      if (!langValue) {
-        // 如果目标语言不存在，则添加目标语言 --- 调用翻译方法
-        const translateValue = await translator.translate(newValue, lang);
-        if (translateValue) {
-          updatedLang[key] = translateValue;
-          changes.added.push(key);
-        }
-      } else if (enOldValue !== newValue) {
-        // 如果旧语言和目标语言不一致，则更新目标语言 --- 调用翻译方法
-        const translateValue = await translator.translate(newValue, lang);
-        if (translateValue) {
-          updatedLang[key] = translateValue;
-          changes.updated.push(key);
+        // 检查这一段英文 JSON 是否有变化
+        const flatEnSection = flatten(enSection);
+        const flatEnOldSection = flatten(enOldSection);
+
+        // 如果这一段英文 JSON 是新的或者有变化，则进行翻译
+        if (!Object.prototype.hasOwnProperty.call(stableEnJsonContent, topLevelKey) || isJsonChanged(flatEnSection, flatEnOldSection)) {
+          console.log(`--- 正在翻译 ${lang} 的片段: ${topLevelKey} ---`);
+          try {
+            const translatedSectionJsonString = await translator.translateSingleJsonChunk(
+              JSON.stringify(enSection, null, 2), // 传入格式化的 JSON 片段
+              lang
+            );
+            const translatedSection = JSON.parse(translatedSectionJsonString);
+            // 将翻译后的片段合并到总的目标语言 JSON 对象中
+            updatedTargetLangJson[topLevelKey] = translatedSection[topLevelKey];
+
+            // 记录变化（这里可能需要更细致的记录，例如记录具体哪个内部的key发生了变化）
+            // 目前简化为如果整个段落被翻译/更新，就记录顶层key
+            if (!Object.prototype.hasOwnProperty.call(targetLangJsonContent, topLevelKey)) {
+              changes.added.push(topLevelKey);
+            } else {
+              changes.updated.push(topLevelKey);
+            }
+
+          } catch (error) {
+            console.error(`❌ 翻译 JSON 片段 "${topLevelKey}" 失败，将使用原始英文片段。`, error);
+            // 翻译失败时，保留原始英文值或旧的目标语言值（如果存在）
+            updatedTargetLangJson[topLevelKey] = targetLangJsonContent[topLevelKey] || currentEnJsonContent[topLevelKey];
+          }
+        } else {
+          // 如果英文片段没有变化，则直接保留目标语言中对应的旧值
+          updatedTargetLangJson[topLevelKey] = targetLangJsonContent[topLevelKey];
         }
       }
     }
 
-    // 🔥 删除 en.json 中已经移除的 key
-    for (const key in flatLang) {
-      if (!(key in flatEn)) {
-        delete updatedLang[key];
-        changes.removed.push(key);
+    // 🔥 删除 en.json 中已经移除的顶层 key
+    for (const topLevelKey in targetLangJsonContent) {
+      if (Object.prototype.hasOwnProperty.call(targetLangJsonContent, topLevelKey)) {
+        if (!Object.prototype.hasOwnProperty.call(currentEnJsonContent, topLevelKey)) {
+          delete updatedTargetLangJson[topLevelKey];
+          changes.removed.push(topLevelKey);
+        }
       }
     }
 
-    const nestedLang = unflattenJSON(updatedLang); // 将拍平后的目标语言转换为嵌套的 JSON 对象
-    const prettyJson = JSON.stringify(nestedLang, null, 2); // 将嵌套的 JSON 对象转换为格式化的 JSON 字符串
-    logChanges(lang, changes); // 记录变化
+    const prettyJson = JSON.stringify(updatedTargetLangJson, null, 2);
+    logChanges(lang, changes);
 
     try {
       const ossPath = `${OSS_VERSIONED_LANG_DIR}${lang}.json`;
