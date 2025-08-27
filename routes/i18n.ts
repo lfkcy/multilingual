@@ -109,9 +109,9 @@ async function executeI18nSync(
         SYNC_SCRIPT_PATH,
         uploadedEnJsonContent
           ? [
-            "--en-json-content",
-            Buffer.from(uploadedEnJsonContent).toString("base64"),
-          ]
+              "--en-json-content",
+              Buffer.from(uploadedEnJsonContent).toString("base64"),
+            ]
           : []
       );
 
@@ -231,7 +231,11 @@ router.get("/get-lang", async (req: any, res: any) => {
 router.get("/get-versions", async (req: any, res: any) => {
   try {
     const versions = await ossUtil.listLanguageVersions(OSS_LANG_DIR);
-    res.json({ code: 0, data: versions });
+    res.json({
+      code: 0,
+      data: versions,
+      isAsyncing: currentSyncProcess !== null, // 是否正在同步
+    });
   } catch (error: any) {
     res.status(500).json({
       code: 500,
