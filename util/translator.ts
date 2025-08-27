@@ -6,18 +6,20 @@ import * as path from "path";
 const isProduction = process.env.NODE_ENV === "production";
 
 // 如果非生产环境，则设置代理 --- 生产环境需部署在海外服务器
-// if (!isProduction) {
-// 设置你的代理地址，比如 Clash 的 HTTP 代理
-const proxyAgent = new ProxyAgent(process.env.HTTP_PROXY || "http://127.0.0.1:7890");
+if (!isProduction) {
+  // 设置你的代理地址，比如 Clash 的 HTTP 代理
+  const proxyAgent = new ProxyAgent(
+    process.env.HTTP_PROXY || "http://127.0.0.1:7890"
+  );
 
-// 重写全局 fetch（Gemini SDK 内部使用全局的 fetch）
-globalThis.fetch = ((input: any, init?: any) => {
-  return undiciFetch(input, { ...init, dispatcher: proxyAgent });
-}) as any;
-// }
+  // 重写全局 fetch（Gemini SDK 内部使用全局的 fetch）
+  globalThis.fetch = ((input: any, init?: any) => {
+    return undiciFetch(input, { ...init, dispatcher: proxyAgent });
+  }) as any;
+}
 
-// API 密钥列表 
-const API_KEYS = process.env.GEMINI_API_KEYS!.split(',') || [];
+// API 密钥列表
+const API_KEYS = process.env.GEMINI_API_KEYS!.split(",") || [];
 
 // 缓存目录和文件路径
 const CACHE_DIR = "cache";
@@ -34,15 +36,26 @@ const PROGRESS_FILE = path.join(CACHE_DIR, "translation_progress.json");
 function isLikelyIdentifierOrCode(text: string): boolean {
   // 规则可以根据你的实际数据进行调整和细化
   // 1. 包含下划线或连字符，且不包含空格，通常是文件名、ID等
-  if ((text.includes('_') || text.includes('-')) && !text.includes(' ')) return true;
+  if ((text.includes("_") || text.includes("-")) && !text.includes(" "))
+    return true;
   // 2. 纯数字字符串
   if (/^\d+$/.test(text)) return true;
   // 3. 包含大量特殊字符（非字母、数字、常见标点），可能是路径、URL等
   if (/[^a-zA-Z0-9\s.,?!-]/.test(text)) return true;
   // 4. 以特定前缀开头（如图片路径、按钮类型）
-  if (text.startsWith('img_') || text.startsWith('btn_') || text.startsWith('ID_')) return true;
+  if (
+    text.startsWith("img_") ||
+    text.startsWith("btn_") ||
+    text.startsWith("ID_")
+  )
+    return true;
   // 5. 纯小写或纯大写且较短的单词，可能是枚举值
-  if (text.length < 15 && (text === text.toLowerCase() || text === text.toUpperCase()) && !text.includes(' ')) return true;
+  if (
+    text.length < 15 &&
+    (text === text.toLowerCase() || text === text.toUpperCase()) &&
+    !text.includes(" ")
+  )
+    return true;
 
   // 如果值本身是 JSON 字符串，那更不应该翻译
   try {
@@ -84,8 +97,8 @@ class GeminiTranslator {
 
   /**
    * 初始化 GoogleGenAI 实例
-   * @param apiKey 
-   * @returns 
+   * @param apiKey
+   * @returns
    */
   private initializeGenAI(apiKey: string): GoogleGenAI {
     console.log(`\n🔑 正在使用 API 密钥: ${apiKey.substring(0, 5)}...`);
@@ -105,9 +118,9 @@ class GeminiTranslator {
 
   /**
    * 获取缓存键
-   * @param chunkText 
-   * @param targetLang 
-   * @returns 
+   * @param chunkText
+   * @param targetLang
+   * @returns
    */
   private getCacheKey(chunkText: string, targetLang: string): string {
     return `${targetLang}::${chunkText}`;
@@ -165,7 +178,10 @@ Translated JSON (${targetLang}):`;
    * @param targetLang 目标语言
    * @returns 系统指令字符串
    */
-  private getTranslateTextInstruction(text: string, targetLang: string): string {
+  private getTranslateTextInstruction(
+    text: string,
+    targetLang: string
+  ): string {
     return `You are an expert JSON translator. Your task is to translate only the natural language string values in the JSON from English to ${targetLang}.
 
 **Strict Instructions:**
@@ -211,13 +227,18 @@ Translated (${targetLang}):`;
    * @param targetLang 目标语言
    * @returns 翻译后的字符串
    */
-  private async translateSingleString(text: string, targetLang: string): Promise<string> {
-    if (typeof text !== 'string' || text.trim() === '') {
+  private async translateSingleString(
+    text: string,
+    targetLang: string
+  ): Promise<string> {
+    if (typeof text !== "string" || text.trim() === "") {
       return text; // 不是字符串或空字符串，直接返回
     }
     // 在单行翻译前也进行标识符判断，避免不必要的API调用
     if (isLikelyIdentifierOrCode(text)) {
-      console.log(`   ⏭️ 跳过单行翻译 (可能是标识符): ${text.substring(0, 30)}...`);
+      console.log(
+        `   ⏭️ 跳过单行翻译 (可能是标识符): ${text.substring(0, 30)}...`
+      );
       return text;
     }
 
@@ -237,7 +258,14 @@ Translated (${targetLang}):`;
       try {
         const result = await this.ai.models.generateContent({
           model: "gemini-2.0-flash-lite",
-          contents: [{ role: "user", parts: [{ text: this.getTranslateTextInstruction(text, targetLang) }] }],
+          contents: [
+            {
+              role: "user",
+              parts: [
+                { text: this.getTranslateTextInstruction(text, targetLang) },
+              ],
+            },
+          ],
           config: {
             temperature: 0.1, // 更低的温度以获得更直接的翻译
             maxOutputTokens: 1000, // 足够长的单行文本
@@ -262,19 +290,22 @@ Translated (${targetLang}):`;
           },
         });
         if (!result.text) {
-          throw new Error('单行翻译返回空文本');
+          throw new Error("单行翻译返回空文本");
         }
         const translatedText = result.text.trim();
         // 简单的校验，避免模型返回空或非预期内容
-        if (!translatedText || translatedText.length < 1) { // 长度小于1，视为无效翻译
-          throw new Error('单行翻译返回空文本');
+        if (!translatedText || translatedText.length < 1) {
+          // 长度小于1，视为无效翻译
+          throw new Error("单行翻译返回空文本");
         }
         this.cache.set(cacheKey, translatedText);
         this.saveCache();
         return translatedText;
       } catch (error: any) {
         console.error(
-          `   ❌ 单行翻译失败 (尝试 ${attempt + 1}/${maxAttempts}, 错误: ${error.message || error})`
+          `   ❌ 单行翻译失败 (尝试 ${attempt + 1}/${maxAttempts}, 错误: ${
+            error.message || error
+          })`
         );
         if (
           error.status === 429 ||
@@ -291,7 +322,9 @@ Translated (${targetLang}):`;
         attempt++;
       }
     }
-    console.warn(`   ⚠️ 单行翻译最终失败，返回原始文本: ${text.substring(0, 50)}...`);
+    console.warn(
+      `   ⚠️ 单行翻译最终失败，返回原始文本: ${text.substring(0, 50)}...`
+    );
     return text; // 失败后返回原始文本
   }
 
@@ -308,41 +341,71 @@ Translated (${targetLang}):`;
     currentTranslatedObj: any,
     targetLang: string
   ): Promise<any> {
-    if (typeof originalJsonObj !== 'object' || originalJsonObj === null || typeof currentTranslatedObj !== 'object' || currentTranslatedObj === null) {
+    if (
+      typeof originalJsonObj !== "object" ||
+      originalJsonObj === null ||
+      typeof currentTranslatedObj !== "object" ||
+      currentTranslatedObj === null
+    ) {
       return currentTranslatedObj; // 非对象或数组直接返回当前翻译结果
     }
 
     if (Array.isArray(originalJsonObj) && Array.isArray(currentTranslatedObj)) {
       // 如果是数组，遍历每个元素
-      for (let i = 0; i < originalJsonObj.length && i < currentTranslatedObj.length; i++) {
+      for (
+        let i = 0;
+        i < originalJsonObj.length && i < currentTranslatedObj.length;
+        i++
+      ) {
         currentTranslatedObj[i] = await this.findAndTranslateRemainingStrings(
           originalJsonObj[i],
           currentTranslatedObj[i],
           targetLang
         );
       }
-    } else if (!Array.isArray(originalJsonObj) && !Array.isArray(currentTranslatedObj)) {
+    } else if (
+      !Array.isArray(originalJsonObj) &&
+      !Array.isArray(currentTranslatedObj)
+    ) {
       // 如果是对象，遍历每个键值对
       for (const key in originalJsonObj) {
         if (Object.prototype.hasOwnProperty.call(originalJsonObj, key)) {
           const originalValue = originalJsonObj[key];
           const translatedValue = currentTranslatedObj[key];
 
-          if (typeof originalValue === 'string' && typeof translatedValue === 'string') {
+          if (
+            typeof originalValue === "string" &&
+            typeof translatedValue === "string"
+          ) {
             // 如果原始值和翻译值都是字符串
             // 且原始值和翻译值相同 (表示可能未翻译)
             // 且原始值不是我们判断为标识符或代码的类型
-            if (originalValue === translatedValue && !isLikelyIdentifierOrCode(originalValue)) {
-              console.log(`   🔍 发现未翻译字符串 (原始==翻译): ${originalValue.substring(0, 50)}...`);
-              currentTranslatedObj[key] = await this.translateSingleString(originalValue, targetLang);
+            if (
+              originalValue === translatedValue &&
+              !isLikelyIdentifierOrCode(originalValue)
+            ) {
+              console.log(
+                `   🔍 发现未翻译字符串 (原始==翻译): ${originalValue.substring(
+                  0,
+                  50
+                )}...`
+              );
+              currentTranslatedObj[key] = await this.translateSingleString(
+                originalValue,
+                targetLang
+              );
             }
-          } else if (typeof originalValue === 'object' && originalValue !== null) {
+          } else if (
+            typeof originalValue === "object" &&
+            originalValue !== null
+          ) {
             // 如果是嵌套对象或数组，递归调用
-            currentTranslatedObj[key] = await this.findAndTranslateRemainingStrings(
-              originalValue,
-              translatedValue,
-              targetLang
-            );
+            currentTranslatedObj[key] =
+              await this.findAndTranslateRemainingStrings(
+                originalValue,
+                translatedValue,
+                targetLang
+              );
           }
         }
       }
@@ -436,7 +499,9 @@ Translated (${targetLang}):`;
     console.log(`\n🚀 开始翻译 JSON 片段: ${jsonChunk.substring(0, 50)}...`);
 
     if (this.completedTranslations.has(cacheKey)) {
-      console.log(`⏭️ 跳过已完成任务 (已记录): ${jsonChunk.substring(0, 50)}...`);
+      console.log(
+        `⏭️ 跳过已完成任务 (已记录): ${jsonChunk.substring(0, 50)}...`
+      );
       return this.cache.get(cacheKey) || jsonChunk;
     }
 
@@ -471,13 +536,30 @@ Translated (${targetLang}):`;
       try {
         if (globalAttempt > 0) {
           console.log(
-            `第 ${globalAttempt + 1}/${maxApiRetries} 次全局尝试翻译 JSON 片段：${jsonChunk.substring(0, 50)}... (使用密钥索引: ${this.currentKeyIndex})`
+            `第 ${
+              globalAttempt + 1
+            }/${maxApiRetries} 次全局尝试翻译 JSON 片段：${jsonChunk.substring(
+              0,
+              50
+            )}... (使用密钥索引: ${this.currentKeyIndex})`
           );
         }
 
         const result = await this.ai.models.generateContent({
           model: "gemini-2.0-flash-lite",
-          contents: [{ role: "user", parts: [{ text: this.getTranslateSystemInstruction(jsonChunk, targetLang) }] }],
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: this.getTranslateSystemInstruction(
+                    jsonChunk,
+                    targetLang
+                  ),
+                },
+              ],
+            },
+          ],
           config: {
             temperature: 0.1,
             responseMimeType: "application/json",
@@ -501,7 +583,6 @@ Translated (${targetLang}):`;
               },
             ],
           },
-
         });
 
         const responseText = result.text;
@@ -518,7 +599,10 @@ Translated (${targetLang}):`;
           console.log("✅ 首次 JSON 解析成功。");
         } catch (jsonParseError) {
           console.warn(
-            `⚠️ 首次无法解析 Gemini 返回的 JSON。原始响应: "${responseText.substring(0, 200)}..." 错误: ${jsonParseError}`
+            `⚠️ 首次无法解析 Gemini 返回的 JSON。原始响应: "${responseText.substring(
+              0,
+              200
+            )}..." 错误: ${jsonParseError}`
           );
           // 如果首次解析失败，就保持 currentTranslatedObj 为原始解析对象，让后续的单行修复进行处理
           currentTranslatedObj = originalParsedJson;
@@ -533,9 +617,16 @@ Translated (${targetLang}):`;
         );
         console.log("✨ 二次检查及修复完成。");
 
-        const finalTranslatedJson = JSON.stringify(currentTranslatedObj, null, 2);
+        const finalTranslatedJson = JSON.stringify(
+          currentTranslatedObj,
+          null,
+          2
+        );
 
-        console.log("✅ 翻译响应 (部分):", finalTranslatedJson.substring(0, 200));
+        console.log(
+          "✅ 翻译响应 (部分):",
+          finalTranslatedJson.substring(0, 200)
+        );
 
         this.cache.set(cacheKey, finalTranslatedJson);
         this.saveCache();
@@ -544,7 +635,8 @@ Translated (${targetLang}):`;
         return finalTranslatedJson; // 翻译成功！
       } catch (error: any) {
         console.error(
-          `❌ 翻译失败 (密钥索引: ${this.currentKeyIndex}, 错误: ${error.message || error
+          `❌ 翻译失败 (密钥索引: ${this.currentKeyIndex}, 错误: ${
+            error.message || error
           })`
         );
 
@@ -565,7 +657,10 @@ Translated (${targetLang}):`;
     }
 
     console.error(
-      `❌ 所有 API 密钥和重试尝试均失败。返回原始 JSON 片段：${jsonChunk.substring(0, 50)}...`
+      `❌ 所有 API 密钥和重试尝试均失败。返回原始 JSON 片段：${jsonChunk.substring(
+        0,
+        50
+      )}...`
     );
     this.cache.set(cacheKey, jsonChunk);
     this.completedTranslations.add(cacheKey);
