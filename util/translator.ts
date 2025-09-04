@@ -6,17 +6,17 @@ import * as path from "path";
 const isProduction = process.env.NODE_ENV === "production";
 
 // 如果非生产环境，则设置代理 --- 生产环境需部署在海外服务器
-if (!isProduction) {
-  // 设置你的代理地址，比如 Clash 的 HTTP 代理
-  const proxyAgent = new ProxyAgent(
-    process.env.HTTP_PROXY || "http://127.0.0.1:7890"
-  );
+// if (!isProduction) {
+// 设置你的代理地址，比如 Clash 的 HTTP 代理
+const proxyAgent = new ProxyAgent(
+  process.env.HTTP_PROXY || "http://127.0.0.1:7890"
+);
 
-  // 重写全局 fetch（Gemini SDK 内部使用全局的 fetch）
-  globalThis.fetch = ((input: any, init?: any) => {
-    return undiciFetch(input, { ...init, dispatcher: proxyAgent });
-  }) as any;
-}
+// 重写全局 fetch（Gemini SDK 内部使用全局的 fetch）
+globalThis.fetch = ((input: any, init?: any) => {
+  return undiciFetch(input, { ...init, dispatcher: proxyAgent });
+}) as any;
+// }
 
 // API 密钥列表
 const API_KEYS = process.env.GEMINI_API_KEYS!.split(",") || [];
@@ -76,7 +76,6 @@ class GeminiTranslator {
   private currentKeyIndex: number;
   private ai: GoogleGenAI;
   private cache: Map<string, string>;
-  private completedTranslations: Set<string>;
   private lastCallTime: number;
 
   constructor(apiKeys: string[]) {
@@ -84,7 +83,6 @@ class GeminiTranslator {
     this.currentKeyIndex = 0;
     this.ai = this.initializeGenAI(this.apiKeys[this.currentKeyIndex]);
     this.cache = new Map();
-    this.completedTranslations = new Set();
     this.lastCallTime = 0;
     this.loadCache();
     this.loadProgress();
@@ -303,8 +301,7 @@ Translated (${targetLang}):`;
         return translatedText;
       } catch (error: any) {
         console.error(
-          `   ❌ 单行翻译失败 (尝试 ${attempt + 1}/${maxAttempts}, 错误: ${
-            error.message || error
+          `   ❌ 单行翻译失败 (尝试 ${attempt + 1}/${maxAttempts}, 错误: ${error.message || error
           })`
         );
         if (
@@ -450,13 +447,11 @@ Translated (${targetLang}):`;
       if (fs.existsSync(PROGRESS_FILE)) {
         const data = fs.readFileSync(PROGRESS_FILE, "utf8");
         const parsedProgress = JSON.parse(data);
-        this.completedTranslations = new Set(
-          parsedProgress.completedTranslations
-        );
+
         this.currentKeyIndex = parsedProgress.currentKeyIndex || 0; // 加载上次使用的密钥索引
         this.ai = this.initializeGenAI(this.apiKeys[this.currentKeyIndex]); // 重新初始化 AI 实例
         console.log(
-          `✅ 已从 ${PROGRESS_FILE} 加载 ${this.completedTranslations.size} 条已完成任务和上次密钥索引 ${this.currentKeyIndex}。`
+          `✅ 已从 ${PROGRESS_FILE} 加载上次密钥索引 ${this.currentKeyIndex}。`
         );
       }
     } catch (error) {
@@ -470,7 +465,6 @@ Translated (${targetLang}):`;
   private saveProgress(): void {
     try {
       const progressData = {
-        completedTranslations: Array.from(this.completedTranslations),
         currentKeyIndex: this.currentKeyIndex,
       };
       fs.writeFileSync(
@@ -498,16 +492,8 @@ Translated (${targetLang}):`;
     const cacheKey = this.getCacheKey(jsonChunk, targetLang);
     console.log(`\n🚀 开始翻译 JSON 片段: ${jsonChunk.substring(0, 50)}...`);
 
-    if (this.completedTranslations.has(cacheKey)) {
-      console.log(
-        `⏭️ 跳过已完成任务 (已记录): ${jsonChunk.substring(0, 50)}...`
-      );
-      return this.cache.get(cacheKey) || jsonChunk;
-    }
-
     if (this.cache.has(cacheKey)) {
       console.log(`🔄 命中缓存: ${jsonChunk.substring(0, 50)}...`);
-      this.completedTranslations.add(cacheKey);
       this.saveProgress();
       return this.cache.get(cacheKey)!;
     }
@@ -522,9 +508,6 @@ Translated (${targetLang}):`;
     } catch (e) {
       console.error(`❌ 无法解析原始 JSON 片段，可能不是有效的 JSON: ${e}`);
       // 如果原始 JSON 本身就无效，我们无法进行深度比较，直接返回原始 chunk
-      this.cache.set(cacheKey, jsonChunk);
-      this.completedTranslations.add(cacheKey);
-      this.saveProgress();
       return jsonChunk;
     }
 
@@ -536,8 +519,7 @@ Translated (${targetLang}):`;
       try {
         if (globalAttempt > 0) {
           console.log(
-            `第 ${
-              globalAttempt + 1
+            `第 ${globalAttempt + 1
             }/${maxApiRetries} 次全局尝试翻译 JSON 片段：${jsonChunk.substring(
               0,
               50
@@ -628,15 +610,11 @@ Translated (${targetLang}):`;
           finalTranslatedJson.substring(0, 200)
         );
 
-        this.cache.set(cacheKey, finalTranslatedJson);
-        this.saveCache();
-        this.completedTranslations.add(cacheKey);
         this.saveProgress();
         return finalTranslatedJson; // 翻译成功！
       } catch (error: any) {
         console.error(
-          `❌ 翻译失败 (密钥索引: ${this.currentKeyIndex}, 错误: ${
-            error.message || error
+          `❌ 翻译失败 (密钥索引: ${this.currentKeyIndex}, 错误: ${error.message || error
           })`
         );
 
@@ -662,9 +640,6 @@ Translated (${targetLang}):`;
         50
       )}...`
     );
-    this.cache.set(cacheKey, jsonChunk);
-    this.completedTranslations.add(cacheKey);
-    this.saveProgress();
     return jsonChunk;
   }
 }
