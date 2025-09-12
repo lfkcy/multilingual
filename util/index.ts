@@ -61,6 +61,20 @@ function unflattenJSON(flatObj: Record<string, any>) {
   return result;
 }
 
+/**
+ * 辅助函数：将数组分成多个小块
+ * @param array 需要分块的数组
+ * @param chunkSize 每个小块的大小
+ * @returns 分块后的数组
+ */
+function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
+  }
+  return result;
+}
+
 // 稳定 stringify：保证 key 顺序一致
 function stableStringify(obj: Record<string, any>): string {
   const sorted = Object.keys(obj)
@@ -165,4 +179,11 @@ function releaseLock(): void {
   }
 }
 
-export { flatten, unflattenJSON, isJsonChanged, acquireLock, releaseLock };
+export {
+  flatten,
+  unflattenJSON,
+  isJsonChanged,
+  acquireLock,
+  releaseLock,
+  chunkArray,
+};

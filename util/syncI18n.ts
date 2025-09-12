@@ -1,7 +1,7 @@
 import { logChanges } from "./logger";
 import { translator } from "./translator";
 import { ossUtil, OSS_LANG_DIR } from "./oss";
-import { isJsonChanged, unflattenJSON, flatten } from ".";
+import { isJsonChanged, unflattenJSON, flatten, chunkArray } from ".";
 
 interface SyncI18nOptions {
   currentVersion: string; // 当前版本 --- 准备上传的版本
@@ -33,6 +33,7 @@ export async function run({
 
   const OSS_VERSIONED_LANG_DIR = `${OSS_LANG_DIR}${currentVersion}/`; // 上传版本目录 --- oss还并不存在
   const OSS_LATEST_LANG_DIR = `${OSS_LANG_DIR}${latestVersion}/`; // 当前 OSS 上已有的最新版本
+  const CHUNK_SIZE = 500; // 设置每个翻译批次的键数量阈值，例如500个键 --- 防止新增的key过于多导致json内容过于庞大
 
   // --- 1. 获取基准 en.json 文件内容 ---
   let currentEnJsonContent: Record<string, any>;
@@ -123,12 +124,7 @@ export async function run({
       const jsonStr = await ossUtil.getFileContent(
         `${OSS_LATEST_LANG_DIR}${lang}.json`
       );
-      if (!jsonStr.trim()) {
-        console.warn(`⚠️  ${lang}.json 是空文件，已使用空对象替代`);
-        targetLangJsonContent = {};
-      } else {
-        targetLangJsonContent = JSON.parse(jsonStr);
-      }
+      targetLangJsonContent = jsonStr.trim() ? JSON.parse(jsonStr) : {};
     } catch (err) {
       console.warn(`⚠️ 未找到 ${lang}.json 文件，已创建空对象替代`);
       targetLangJsonContent = {};
@@ -148,15 +144,17 @@ export async function run({
 
     // --- 找出所有需要翻译的新增和修改的键 ---
     for (const key in flatEn) {
-      // 如果 en.json 中有新键，或者键值发生了变化，则标记为需要翻译
-      if (!Object.prototype.hasOwnProperty.call(flatEnOld, key)) {
-        changes.added.push(key);
-        keysToTranslate.push(key);
-      } else if (flatEn[key] !== flatEnOld[key]) {
-        changes.updated.push(key);
+      if (
+        !Object.prototype.hasOwnProperty.call(flatEnOld, key) ||
+        flatEn[key] !== flatEnOld[key]
+      ) {
+        if (!Object.prototype.hasOwnProperty.call(flatEnOld, key)) {
+          changes.added.push(key);
+        } else {
+          changes.updated.push(key);
+        }
         keysToTranslate.push(key);
       } else {
-        // 如果键没有变化，并且目标语言中已有翻译，则直接保留
         if (Object.prototype.hasOwnProperty.call(flatTargetLang, key)) {
           updatedFlatTargetLang[key] = flatTargetLang[key];
         } else {
@@ -172,28 +170,34 @@ export async function run({
         `--- 正在翻译 ${lang} 的 ${keysToTranslate.length} 个键... ---`
       );
 
-      // 构建一个只包含需要翻译的键值对的 JSON 对象
-      const jsonToTranslate: Record<string, any> = {};
-      for (const key of keysToTranslate) {
-        jsonToTranslate[key] = flatEn[key];
-      }
+      // 将需要翻译的键数组分成小块
+      const keyChunks = chunkArray(keysToTranslate, CHUNK_SIZE);
 
-      try {
-        const translatedJsonString = await translator.translateSingleJsonChunk(
-          JSON.stringify(jsonToTranslate, null, 2),
-          lang
-        );
-        const translatedFlatJson = JSON.parse(translatedJsonString);
-
-        // 将翻译结果合并到更新后的目标语言扁平对象中
-        for (const key in translatedFlatJson) {
-          updatedFlatTargetLang[key] = translatedFlatJson[key];
+      for (const chunk of keyChunks) {
+        // 构建一个只包含需要翻译的键值对的 JSON 对象
+        const jsonToTranslate: Record<string, any> = {};
+        for (const key of chunk) {
+          jsonToTranslate[key] = flatEn[key];
         }
-      } catch (error) {
-        console.error(`❌ 翻译 JSON 片段失败，将使用原始英文片段。`, error);
-        // 翻译失败时，将英文原文合并进去
-        for (const key of keysToTranslate) {
-          updatedFlatTargetLang[key] = flatEn[key];
+
+        try {
+          const translatedJsonString =
+            await translator.translateSingleJsonChunk(
+              JSON.stringify(jsonToTranslate, null, 2),
+              lang
+            );
+          const translatedFlatJson = JSON.parse(translatedJsonString);
+
+          // 将翻译结果合并到更新后的目标语言扁平对象中
+          for (const key in translatedFlatJson) {
+            updatedFlatTargetLang[key] = translatedFlatJson[key];
+          }
+        } catch (error) {
+          console.error(`❌ 翻译 JSON 片段失败，将使用原始英文片段。`, error);
+          // 翻译失败时，将英文原文合并进去
+          for (const key of chunk) {
+            updatedFlatTargetLang[key] = flatEn[key];
+          }
         }
       }
     }
