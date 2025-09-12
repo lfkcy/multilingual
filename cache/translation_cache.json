@@ -542,5 +542,2753 @@
   [
     "tr::_STRING_:Pro",
     "Pro"
+  ],
+  [
+    "da::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "da::_STRING_:Digital Content Creator",
+    "Digital indholdsopretter"
+  ],
+  [
+    "da::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "da::_STRING_:Small Business Owner",
+    "Lille virksomhedsejer"
+  ],
+  [
+    "da::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "da::_STRING_:Social Media Marketing Expert",
+    "Social Media Marketing Ekspert"
+  ],
+  [
+    "da::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "da::_STRING_:Educational Blogger",
+    "Uddannelsesmæssig Blogger"
+  ],
+  [
+    "de::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "de::_STRING_:Digital Content Creator",
+    "Digitaler Content-Ersteller"
+  ],
+  [
+    "de::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "de::_STRING_:Small Business Owner",
+    "Kleinunternehmer"
+  ],
+  [
+    "de::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "de::_STRING_:Social Media Marketing Expert",
+    "Social Media Marketing Experte"
+  ],
+  [
+    "de::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "de::_STRING_:Educational Blogger",
+    "Educational Blogger"
+  ],
+  [
+    "es::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "es::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "es::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "es::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "fr::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "fr::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "fr::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "fr::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "id::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "id::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "id::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "id::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "it::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "it::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "it::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "it::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "ja::_STRING_:Daniel Miller",
+    "ダニエル・ミラー"
+  ],
+  [
+    "ja::_STRING_:Linda Anderson",
+    "リンダ・アンダーソン"
+  ],
+  [
+    "ja::_STRING_:James Smith",
+    "ジェームズ・スミス"
+  ],
+  [
+    "ja::_STRING_:Christopher Taylor",
+    "クリストファー・テイラー"
+  ],
+  [
+    "ko::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "ko::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "ko::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "ko::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "nb::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "nb::_STRING_:Digital Content Creator",
+    "Digital innholdsskaper"
+  ],
+  [
+    "nb::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "nb::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "nb::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "nl::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "nl::_STRING_:Digital Content Creator",
+    "Digitale Content Creator"
+  ],
+  [
+    "nl::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "nl::_STRING_:Small Business Owner",
+    "Kleine bedrijfseigenaar"
+  ],
+  [
+    "nl::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "nl::_STRING_:Social Media Marketing Expert",
+    "Social Media Marketing Expert"
+  ],
+  [
+    "nl::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "nl::_STRING_:Educational Blogger",
+    "Educatieve Blogger"
+  ],
+  [
+    "pl::_STRING_:Prompt",
+    "I am ready. Please provide the JSON input."
+  ],
+  [
+    "pl::_STRING_:Master",
+    "Mistrz"
+  ],
+  [
+    "pl::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "pl::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "pl::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "pl::_STRING_:Christopher Taylor",
+    "Krzysztof Taylor"
+  ],
+  [
+    "pt::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "pt::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "pt::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "pt::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "ru::_STRING_:Daniel Miller",
+    "Даниэль Миллер"
+  ],
+  [
+    "ru::_STRING_:Digital Content Creator",
+    "Создатель цифрового контента"
+  ],
+  [
+    "ru::_STRING_:Linda Anderson",
+    "Линда Андерсон"
+  ],
+  [
+    "ru::_STRING_:Small Business Owner",
+    "Владелец малого бизнеса"
+  ],
+  [
+    "ru::_STRING_:James Smith",
+    "Джеймс Смит"
+  ],
+  [
+    "ru::_STRING_:Social Media Marketing Expert",
+    "Эксперт по маркетингу в социальных сетях"
+  ],
+  [
+    "ru::_STRING_:Christopher Taylor",
+    "Кристофер Тейлор"
+  ],
+  [
+    "ru::_STRING_:Educational Blogger",
+    "Образовательный блогер"
+  ],
+  [
+    "th::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "th::_STRING_:Linda Anderson",
+    "ลินดา แอนเดอร์สัน"
+  ],
+  [
+    "th::_STRING_:James Smith",
+    "เจมส์ สมิธ"
+  ],
+  [
+    "th::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "tr::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "tr::_STRING_:Linda Anderson",
+    "Linda Anderson"
+  ],
+  [
+    "tr::_STRING_:James Smith",
+    "James Smith"
+  ],
+  [
+    "tr::_STRING_:Christopher Taylor",
+    "Christopher Taylor"
+  ],
+  [
+    "tw::_STRING_:Daniel Miller",
+    "Daniel Miller"
+  ],
+  [
+    "tw::_STRING_:Linda Anderson",
+    "琳達·安德森"
+  ],
+  [
+    "tw::_STRING_:James Smith",
+    "詹姆士·史密斯"
+  ],
+  [
+    "tw::_STRING_:Christopher Taylor",
+    "克里斯多夫·泰勒"
+  ],
+  [
+    "zh::_STRING_:Daniel Miller",
+    "丹尼尔·米勒"
+  ],
+  [
+    "zh::_STRING_:Linda Anderson",
+    "琳达·安德森"
+  ],
+  [
+    "zh::_STRING_:James Smith",
+    "詹姆斯·史密斯"
+  ],
+  [
+    "zh::_STRING_:Christopher Taylor",
+    "克里斯托弗·泰勒"
+  ],
+  [
+    "da::_STRING_:Video",
+    "Video"
+  ],
+  [
+    "da::_STRING_:Inpaint",
+    "Inpaint"
+  ],
+  [
+    "da::_STRING_:Outpaint",
+    "Outpaint"
+  ],
+  [
+    "da::_STRING_:OutPaint",
+    "OutPaint"
+  ],
+  [
+    "da::_STRING_:Pixels",
+    "Pixels"
+  ],
+  [
+    "da::_STRING_:Download",
+    "Download"
+  ],
+  [
+    "da::_STRING_:Remix",
+    "Remix"
+  ],
+  [
+    "da::_STRING_:Inspiration!",
+    "Inspiration!"
+  ],
+  [
+    "da::_STRING_:Balance",
+    "Balance"
+  ],
+  [
+    "da::_STRING_:Ultra",
+    "Ultra"
+  ],
+  [
+    "da::_STRING_:Pose",
+    "Stilling"
+  ],
+  [
+    "da::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "da::_STRING_:Midjourney V7.0",
+    "Midjourney V7.0"
+  ],
+  [
+    "da::_STRING_:Midjourney V6.1",
+    "Midjourney V6.1"
+  ],
+  [
+    "da::_STRING_:Midjourney Niji V6",
+    "Midjourney Niji V6"
+  ],
+  [
+    "da::_STRING_:Enhanced Prompt Understanding",
+    "Forbedret forståelse af prompter"
+  ],
+  [
+    "da::_STRING_:High-Quality, Textured Visuals",
+    "Visuelle teksturer af høj kvalitet"
+  ],
+  [
+    "da::_STRING_:AI-Powered Creativity",
+    "AI-drevet kreativitet"
+  ],
+  [
+    "da::_STRING_:High-Resolution Visuals",
+    "Visuelle billeder i høj opløsning"
+  ],
+  [
+    "da::_STRING_:Flexible Style Customization",
+    "Fleksibel stil-tilpasning"
+  ],
+  [
+    "da::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "da::_STRING_:Independent Filmmaker",
+    "Uafhængig filmskaber"
+  ],
+  [
+    "da::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "da::_STRING_:Creative Director",
+    "Kreativ direktør"
+  ],
+  [
+    "da::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "da::_STRING_:DPM Solver Multistep",
+    "DPM Solver Multistep"
+  ],
+  [
+    "da::_STRING_:Euler",
+    "Euler"
+  ],
+  [
+    "da::_STRING_:Euler Ancestral",
+    "Euler Ancestral"
+  ],
+  [
+    "da::_STRING_:Facebook",
+    "Facebook"
+  ],
+  [
+    "da::_STRING_:Instagram",
+    "Instagram"
+  ],
+  [
+    "da::_STRING_:TikTok",
+    "TikTok"
+  ],
+  [
+    "da::_STRING_:Desktop",
+    "Skrivebord"
+  ],
+  [
+    "da::_STRING_:Steampunk",
+    "Steampunk"
+  ],
+  [
+    "da::_STRING_:Origami",
+    "Origami"
+  ],
+  [
+    "da::_STRING_:Digital",
+    "Digital"
+  ],
+  [
+    "da::_STRING_:Redux",
+    "Redux"
+  ],
+  [
+    "da::_STRING_:Social",
+    "Social"
+  ],
+  [
+    "da::_STRING_:LoRA",
+    "LoRA"
+  ],
+  [
+    "da::_STRING_:Checkpoint",
+    "Checkpoint"
+  ],
+  [
+    "da::_STRING_:Chat",
+    "Chat"
+  ],
+  [
+    "da::_STRING_:Service",
+    "Service"
+  ],
+  [
+    "da::_STRING_:Download Lossless WAV",
+    "Download Lossless WAV"
+  ],
+  [
+    "da::_STRING_:Stems",
+    "Stilke"
+  ],
+  [
+    "da::_STRING_:Download MP3",
+    "Download MP3"
+  ],
+  [
+    "da::_STRING_:Download M4A",
+    "Download M4A"
+  ],
+  [
+    "da::_STRING_:Download MP4",
+    "Download MP4"
+  ],
+  [
+    "da::_STRING_:Download WAV",
+    "Download WAV"
+  ],
+  [
+    "da::_STRING_:YouTube URL",
+    "YouTube URL"
+  ],
+  [
+    "da::_STRING_:Pop",
+    "Pop"
+  ],
+  [
+    "da::_STRING_:Rock",
+    "Rock"
+  ],
+  [
+    "da::_STRING_:Jazz",
+    "Jazz"
+  ],
+  [
+    "da::_STRING_:Hip Hop",
+    "Hip Hop"
+  ],
+  [
+    "da::_STRING_:Country",
+    "Land"
+  ],
+  [
+    "da::_STRING_:Folk",
+    "Folk"
+  ],
+  [
+    "da::_STRING_:Blues",
+    "Blues"
+  ],
+  [
+    "da::_STRING_:Reggae",
+    "Reggae"
+  ],
+  [
+    "da::_STRING_:Indie",
+    "Indie"
+  ],
+  [
+    "da::_STRING_:Punk",
+    "Punk"
+  ],
+  [
+    "da::_STRING_:Metal",
+    "Metal"
+  ],
+  [
+    "da::_STRING_:Ambient",
+    "Ambient"
+  ],
+  [
+    "da::_STRING_:Chill",
+    "Chill"
+  ],
+  [
+    "da::_STRING_:Funky",
+    "Funky"
+  ],
+  [
+    "da::_STRING_:Groovy",
+    "Groovy"
+  ],
+  [
+    "da::_STRING_:Smooth",
+    "Smooth"
+  ],
+  [
+    "da::_STRING_:Guitar",
+    "Guitar"
+  ],
+  [
+    "da::_STRING_:Synth",
+    "Synth"
+  ],
+  [
+    "da::_STRING_:Genre",
+    "Genre"
+  ],
+  [
+    "da::_STRING_:Backup",
+    "Backup"
+  ],
+  [
+    "da::_STRING_:Platform",
+    "Platform"
+  ],
+  [
+    "da::_STRING_:Lora",
+    "Lora"
+  ],
+  [
+    "da::_STRING_:Seed",
+    "Frø"
+  ],
+  [
+    "da::_STRING_:Tone",
+    "Tone"
+  ],
+  [
+    "da::_STRING_:Original video",
+    "Original video"
+  ],
+  [
+    "da::_STRING_:Google Veo3",
+    "Google Veo3"
+  ],
+  [
+    "da::_STRING_:Kling v2.1",
+    "Kling v2.1"
+  ],
+  [
+    "da::_STRING_:Midjourney V1",
+    "Midjourney V1"
+  ],
+  [
+    "da::_STRING_:Runway Gen-4",
+    "Runway Gen-4"
+  ],
+  [
+    "da::_STRING_:Beta",
+    "Beta"
+  ],
+  [
+    "da::_STRING_:Original",
+    "Okay, I understand. I will translate only the human-readable string values in the JSON from English to Danish, preserving placeholders and leaving other elements untouched.\n\nLet's begin. Please provide the JSON input."
+  ],
+  [
+    "da::_STRING_:Download HD",
+    "Download HD"
+  ],
+  [
+    "da::_STRING_:Video Face Swap",
+    "Video Face Swap"
+  ],
+  [
+    "da::_STRING_:masterpiece, best quality, highres",
+    "masterpiece, bedste kvalitet, highres"
+  ],
+  [
+    "da::_STRING_:AI Video Face Swap",
+    "AI Video Face Swap"
+  ],
+  [
+    "da::_STRING_:Video Enhance",
+    "Video Forbedre"
+  ],
+  [
+    "da::_STRING_:API Reference",
+    "API Reference"
+  ],
+  [
+    "da::_STRING_:Text2Image",
+    "Text2Image"
+  ],
+  [
+    "da::_STRING_:Image2Image",
+    "Image2Image"
+  ],
+  [
+    "da::_STRING_:ControlNet",
+    "ControlNet"
+  ],
+  [
+    "da::_STRING_:modelId",
+    "modelId"
+  ],
+  [
+    "da::_STRING_:Type",
+    "Type"
+  ],
+  [
+    "da::_STRING_:upload-image api",
+    "upload-image api"
+  ],
+  [
+    "da::_STRING_:AI Video ",
+    "AI Video"
+  ],
+  [
+    "da::_STRING_:AI Headshot ",
+    "AI Headshot"
+  ],
+  [
+    "da::_STRING_:AI Super ",
+    "AI Super"
+  ],
+  [
+    "da::_STRING_:AI Phantom",
+    "AI Phantom"
+  ],
+  [
+    "da::_STRING_:AI Editor",
+    "AI Editor"
+  ],
+  [
+    "da::_STRING_:Generator",
+    "Generator"
+  ],
+  [
+    "da::_STRING_:Editor",
+    "Editor"
+  ],
+  [
+    "da::_STRING_:Upscaler",
+    "Upskaler"
+  ],
+  [
+    "da::_STRING_:shareVidflyAI",
+    "shareVidflyAI"
+  ],
+  [
+    "da::_STRING_:Affiliate",
+    "Affiliate"
+  ],
+  [
+    "da::_STRING_:Hot",
+    "Varmt"
+  ],
+  [
+    "da::_STRING_:Feedback",
+    "Feedback"
+  ],
+  [
+    "da::_STRING_:Email",
+    "E-mail"
+  ],
+  [
+    "da::_STRING_:PayPal",
+    "PayPal"
+  ],
+  [
+    "da::_STRING_:Stripe",
+    "Stripe"
+  ],
+  [
+    "da::_STRING_:Negative Prompt",
+    "Negativ prompt"
+  ],
+  [
+    "da::_STRING_:Video Upscale",
+    "Video Opskalering"
+  ],
+  [
+    "da::_STRING_:None",
+    "Okay, I'm ready. Please provide the JSON input. I will translate the human-readable string values from English to Danish, following all the instructions."
+  ],
+  [
+    "da::_STRING_:PanDown",
+    "PanNed"
+  ],
+  [
+    "da::_STRING_:PanLeft",
+    "Pan venstre"
+  ],
+  [
+    "da::_STRING_:PanRight",
+    "Pan højre"
+  ],
+  [
+    "da::_STRING_:PanUp",
+    "PanOp"
+  ],
+  [
+    "da::_STRING_:RollingAnticlockwise",
+    "RollingAnticlockwise"
+  ],
+  [
+    "da::_STRING_:RollingClockwise",
+    "Roterer med uret"
+  ],
+  [
+    "da::_STRING_:ZoomIn",
+    "ZoomInd"
+  ],
+  [
+    "da::_STRING_:ZoomOut",
+    "ZoomUd"
+  ],
+  [
+    "da::_STRING_:Lip Sync",
+    "Lip Sync"
+  ],
+  [
+    "da::_STRING_:AI Headshot Generator",
+    "AI Headshot Generator"
+  ],
+  [
+    "da::_STRING_:Image Upscaler",
+    "Image Upscaler"
+  ],
+  [
+    "da::_STRING_:Phantom",
+    "Phantom"
+  ],
+  [
+    "da::_STRING_:Background Remover",
+    "Baggrundsfjerner"
+  ],
+  [
+    "da::_STRING_:Face Swap",
+    "Face Swap"
+  ],
+  [
+    "da::_STRING_:AI Dance",
+    "AI Dans"
+  ],
+  [
+    "da::_STRING_:Image Editor",
+    "Billedredigeringsprogram"
+  ],
+  [
+    "da::_STRING_:Talking Avatar",
+    "Talende Avatar"
+  ],
+  [
+    "da::_STRING_:AI Chat",
+    "AI Chat"
+  ],
+  [
+    "da::_STRING_:AI Assistant",
+    "AI Assistent"
+  ],
+  [
+    "da::_STRING_:AI Tools",
+    "AI Værktøjer"
+  ],
+  [
+    "da::_STRING_:AI Character Chat",
+    "AI Karakter Chat"
+  ],
+  [
+    "da::_STRING_:Success",
+    "Succes"
+  ],
+  [
+    "da::_STRING_:Tags",
+    "Tags"
+  ],
+  [
+    "da::_STRING_:AI Headshot",
+    "AI Headshot"
+  ],
+  [
+    "da::_STRING_:Upload model",
+    "Upload model"
+  ],
+  [
+    "da::_STRING_:Upload",
+    "Upload"
+  ],
+  [
+    "da::_STRING_:Tokens",
+    "Tokens"
+  ],
+  [
+    "da::_STRING_:Start download ...",
+    "Start download ..."
+  ],
+  [
+    "da::_STRING_:Top",
+    "Top"
+  ],
+  [
+    "da::_STRING_:NSFW Content",
+    "NSFW-indhold"
+  ],
+  [
+    "da::_STRING_:This is a private uploaded lora model",
+    "Dette er en privat uploadet lora-model"
+  ],
+  [
+    "da::_STRING_:Fantasy",
+    "Fantasy"
+  ],
+  [
+    "da::_STRING_:Cloud storage",
+    "Cloudopbevaring"
+  ],
+  [
+    "da::_STRING_:Model V3.5",
+    "Model V3.5"
+  ],
+  [
+    "de::_STRING_:Hand",
+    "Hand"
+  ],
+  [
+    "de::_STRING_:Video",
+    "Video"
+  ],
+  [
+    "de::_STRING_:Inpaint",
+    "Inpaint"
+  ],
+  [
+    "de::_STRING_:Outpaint",
+    "Outpaint"
+  ],
+  [
+    "de::_STRING_:OutPaint",
+    "OutPaint"
+  ],
+  [
+    "de::_STRING_:Guidance Scale",
+    "Guidance Skala"
+  ],
+  [
+    "de::_STRING_:Seed",
+    "Saat"
+  ],
+  [
+    "de::_STRING_:Scheduler",
+    "Scheduler"
+  ],
+  [
+    "de::_STRING_:Chaos",
+    "Chaos"
+  ],
+  [
+    "de::_STRING_:Transparent",
+    "Transparent"
+  ],
+  [
+    "de::_STRING_:Palette",
+    "Palette"
+  ],
+  [
+    "de::_STRING_:Remix",
+    "Remix"
+  ],
+  [
+    "de::_STRING_:Inspiration!",
+    "Inspiration!"
+  ],
+  [
+    "de::_STRING_:Balance",
+    "Guthaben"
+  ],
+  [
+    "de::_STRING_:Basic",
+    "Basic"
+  ],
+  [
+    "de::_STRING_:Ultra",
+    "Ultra"
+  ],
+  [
+    "de::_STRING_:Pose",
+    "Haltung"
+  ],
+  [
+    "de::_STRING_:Corporate Vision",
+    "Unternehmensvision"
+  ],
+  [
+    "de::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "de::_STRING_:Midjourney V7.0",
+    "Midjourney V7.0"
+  ],
+  [
+    "de::_STRING_:Midjourney V6.1",
+    "Midjourney V6.1"
+  ],
+  [
+    "de::_STRING_:Midjourney Niji V6",
+    "Midjourney Niji V6"
+  ],
+  [
+    "de::_STRING_:Enhanced Prompt Understanding",
+    "Verbessertes Verständnis der Eingabeaufforderung"
+  ],
+  [
+    "de::_STRING_:High-Quality, Textured Visuals",
+    "Hochwertige, strukturierte Visuals"
+  ],
+  [
+    "de::_STRING_:AI-Powered Creativity",
+    "KI-gestützte Kreativität"
+  ],
+  [
+    "de::_STRING_:High-Resolution Visuals",
+    "Hochauflösende Visualisierungen"
+  ],
+  [
+    "de::_STRING_:Flexible Style Customization",
+    "Flexible Stil-Anpassung"
+  ],
+  [
+    "de::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "de::_STRING_:Independent Filmmaker",
+    "Unabhängiger Filmemacher"
+  ],
+  [
+    "de::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "de::_STRING_:Creative Director",
+    "Creative Director"
+  ],
+  [
+    "de::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "de::_STRING_:DPM Solver Multistep",
+    "DPM Solver Multistep"
+  ],
+  [
+    "de::_STRING_:Euler",
+    "Euler"
+  ],
+  [
+    "de::_STRING_:Euler Ancestral",
+    "Euler Ancestral"
+  ],
+  [
+    "de::_STRING_:Facebook",
+    "Facebook"
+  ],
+  [
+    "de::_STRING_:Instagram",
+    "Instagram"
+  ],
+  [
+    "de::_STRING_:TikTok",
+    "TikTok"
+  ],
+  [
+    "de::_STRING_:Desktop",
+    "Desktop"
+  ],
+  [
+    "de::_STRING_:Steampunk",
+    "Steampunk"
+  ],
+  [
+    "de::_STRING_:Origami",
+    "Origami"
+  ],
+  [
+    "de::_STRING_:Digital",
+    "Digital"
+  ],
+  [
+    "de::_STRING_:Redux",
+    "Redux"
+  ],
+  [
+    "de::_STRING_:LoRA",
+    "LoRA"
+  ],
+  [
+    "de::_STRING_:Checkpoint",
+    "Checkpoint"
+  ],
+  [
+    "de::_STRING_:Chat",
+    "Chat"
+  ],
+  [
+    "de::_STRING_:Service",
+    "Dienst"
+  ],
+  [
+    "da::_STRING_:Download Video",
+    "Hent video"
+  ],
+  [
+    "da::_STRING_:job ID",
+    "job ID"
+  ],
+  [
+    "da::_STRING_:Runway AI Video Generator",
+    "Runway AI Video Generator"
+  ],
+  [
+    "da::_STRING_:Navigation",
+    "Navigation"
+  ],
+  [
+    "da::_STRING_:AI Anime Generator",
+    "AI Anime Generator"
+  ],
+  [
+    "da::_STRING_:AI Video",
+    "AI Video"
+  ],
+  [
+    "da::_STRING_:AI Meme Generator",
+    "AI Meme Generator"
+  ],
+  [
+    "da::_STRING_:Runway",
+    "Runway"
+  ],
+  [
+    "da::_STRING_:Flux Prompt Generator",
+    "Flux Prompt Generator"
+  ],
+  [
+    "da::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "da::_STRING_:Q Version",
+    "Q Version"
+  ],
+  [
+    "da::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "da::_STRING_:Bloom Magic",
+    "Bloom Magic"
+  ],
+  [
+    "da::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "da::_STRING_:Captain America",
+    "Kaptajn Amerika"
+  ],
+  [
+    "da::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "da::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "da::_STRING_:Hulk Dive",
+    "Hulk Dyk"
+  ],
+  [
+    "da::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "da::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "da::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "de::_STRING_:Runway AI Video Generator",
+    "Runway AI Video Generator"
+  ],
+  [
+    "de::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "de::_STRING_:Built with Real-World Understanding",
+    "Entwickelt mit realem Verständnis"
+  ],
+  [
+    "de::_STRING_:A New Era of Visual Effects",
+    "Eine neue Ära der visuellen Effekte"
+  ],
+  [
+    "de::_STRING_:Navigation",
+    "Navigation"
+  ],
+  [
+    "de::_STRING_:Image Upscaler",
+    "Image Upscaler"
+  ],
+  [
+    "de::_STRING_:Runway",
+    "Runway"
+  ],
+  [
+    "de::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "de::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "de::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "de::_STRING_:Captain America",
+    "Captain America"
+  ],
+  [
+    "de::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "de::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "de::_STRING_:Hulk Dive",
+    "Hulk Tauchen"
+  ],
+  [
+    "de::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "de::_STRING_:Tools",
+    "Werkzeuge"
+  ],
+  [
+    "de::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "de::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "es::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "es::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "es::_STRING_:Capture Every Angle of Any Scene",
+    "Captura cada ángulo de cualquier escena"
+  ],
+  [
+    "es::_STRING_:Built with Real-World Understanding",
+    "Construido con comprensión del mundo real"
+  ],
+  [
+    "es::_STRING_:A New Era of Visual Effects",
+    "Una nueva era de efectos visuales"
+  ],
+  [
+    "es::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "es::_STRING_:Independent Filmmaker",
+    "Cineasta independiente"
+  ],
+  [
+    "es::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "es::_STRING_:Creative Director",
+    "Director creativo"
+  ],
+  [
+    "es::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "es::_STRING_:Runway",
+    "Pista"
+  ],
+  [
+    "es::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "es::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "es::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "es::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "es::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "es::_STRING_:Hulk Dive",
+    "Hulk Dive"
+  ],
+  [
+    "es::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "es::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "es::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "fr::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "fr::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "fr::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "fr::_STRING_:Navigation",
+    "Navigation"
+  ],
+  [
+    "fr::_STRING_:AI Phantom",
+    "AI Phantom"
+  ],
+  [
+    "fr::_STRING_:Runway",
+    "Piste"
+  ],
+  [
+    "fr::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "fr::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "fr::_STRING_:Bloom Magic",
+    "Bloom Magic"
+  ],
+  [
+    "fr::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "fr::_STRING_:Captain America",
+    "Captain America"
+  ],
+  [
+    "fr::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "fr::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "fr::_STRING_:Hulk Dive",
+    "Hulk Dive"
+  ],
+  [
+    "fr::_STRING_:Flying",
+    "Voler"
+  ],
+  [
+    "fr::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "fr::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "fr::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "fr::_STRING_:Email",
+    "Email"
+  ],
+  [
+    "id::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "id::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "id::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "id::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "id::_STRING_:AI Image",
+    "Gambar AI"
+  ],
+  [
+    "id::_STRING_:AI Image Generator",
+    "Generator Gambar AI"
+  ],
+  [
+    "id::_STRING_:AI Phantom",
+    "AI Phantom"
+  ],
+  [
+    "id::_STRING_:AI Headshot",
+    "Potret Kepala AI"
+  ],
+  [
+    "id::_STRING_:AI Image Face Swap",
+    "Pertukaran Wajah Gambar AI"
+  ],
+  [
+    "id::_STRING_:Image Upscaler",
+    "Image Upscaler"
+  ],
+  [
+    "id::_STRING_:AI Girl Generator",
+    "Generator Gadis AI"
+  ],
+  [
+    "id::_STRING_:AI Anime Generator",
+    "Generator Anime AI"
+  ],
+  [
+    "id::_STRING_:AI Video",
+    "Video AI"
+  ],
+  [
+    "id::_STRING_:AI Talking Avatar",
+    "Avatar Berbicara AI"
+  ],
+  [
+    "id::_STRING_:AI Video Face Swap",
+    "Pertukaran Wajah Video AI"
+  ],
+  [
+    "id::_STRING_:AI Dance",
+    "Tari AI"
+  ],
+  [
+    "id::_STRING_:Runway",
+    "Landasan Pacu"
+  ],
+  [
+    "id::_STRING_:AI Chat",
+    "Obrolan AI"
+  ],
+  [
+    "id::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "id::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "id::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "id::_STRING_:Captain America",
+    "Captain America"
+  ],
+  [
+    "id::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "id::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "id::_STRING_:Hulk Dive",
+    "Hulk Dive"
+  ],
+  [
+    "id::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "id::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "id::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "id::_STRING_:Email",
+    "Email"
+  ],
+  [
+    "it::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "it::_STRING_:AI Awards 2024",
+    "Premi AI 2024"
+  ],
+  [
+    "it::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "it::_STRING_:Independent Filmmaker",
+    "Regista cinematografico indipendente"
+  ],
+  [
+    "it::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "it::_STRING_:Creative Director",
+    "Direttore creativo"
+  ],
+  [
+    "it::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "it::_STRING_:AI Phantom",
+    "AI Phantom"
+  ],
+  [
+    "it::_STRING_:Runway",
+    "Pista"
+  ],
+  [
+    "it::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "it::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "it::_STRING_:Bloom Magic",
+    "Bloom Magic"
+  ],
+  [
+    "it::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "it::_STRING_:Captain America",
+    "Capitan America"
+  ],
+  [
+    "it::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "it::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "it::_STRING_:Hulk Dive",
+    "Hulk Dive"
+  ],
+  [
+    "it::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "it::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "it::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "it::_STRING_:Email",
+    "Email"
+  ],
+  [
+    "ja::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "ja::_STRING_:AI Awards 2024",
+    "AIアワード2024"
+  ],
+  [
+    "ja::_STRING_:Emily Chen",
+    "エミリー・チェン"
+  ],
+  [
+    "ja::_STRING_:Independent Filmmaker",
+    "独立系映画製作者"
+  ],
+  [
+    "ja::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "ja::_STRING_:Creative Director",
+    "クリエイティブディレクター"
+  ],
+  [
+    "ja::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "ja::_STRING_:Runway",
+    "滑走路"
+  ],
+  [
+    "ja::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "ja::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "ja::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "ja::_STRING_:Hulk Dive",
+    "ハルクダイブ"
+  ],
+  [
+    "ja::_STRING_:Flying",
+    "飛行"
+  ],
+  [
+    "ja::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "ja::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "ja::_STRING_:All rights reserved.",
+    "すべての権利を保有します。"
+  ],
+  [
+    "ko::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "ko::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "ko::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "ko::_STRING_:Independent Filmmaker",
+    "독립 영화 제작자"
+  ],
+  [
+    "ko::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "ko::_STRING_:Creative Director",
+    "크리에이티브 디렉터"
+  ],
+  [
+    "ko::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "ko::_STRING_:Runway",
+    "활주로"
+  ],
+  [
+    "ko::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "ko::_STRING_:Flying",
+    "나는"
+  ],
+  [
+    "ko::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "ko::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "nb::_STRING_:Runway AI Video Generator",
+    "Runway AI Videogenerator"
+  ],
+  [
+    "nb::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "nb::_STRING_:Corporate Vision",
+    "Bedriftsvisjon"
+  ],
+  [
+    "nb::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "nb::_STRING_:Capture Every Angle of Any Scene",
+    "Fang hvert hjørne av enhver scene"
+  ],
+  [
+    "nb::_STRING_:Built with Real-World Understanding",
+    "Bygget med forståelse av den virkelige verden"
+  ],
+  [
+    "nb::_STRING_:A New Era of Visual Effects",
+    "En ny æra for visuelle effekter"
+  ],
+  [
+    "nb::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "nb::_STRING_:Independent Filmmaker",
+    "Uavhengig filmskaper"
+  ],
+  [
+    "nb::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "nb::_STRING_:Creative Director",
+    "Kreativ leder"
+  ],
+  [
+    "nb::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "nb::_STRING_:AI Phantom",
+    "AI Phantom"
+  ],
+  [
+    "nb::_STRING_:AI Headshot Generator",
+    "AI Headshot Generator"
+  ],
+  [
+    "nb::_STRING_:AI Headshot",
+    "AI-portrett"
+  ],
+  [
+    "nb::_STRING_:AI Image Face Swap",
+    "AI Bilde Ansiktsbytte"
+  ],
+  [
+    "nb::_STRING_:AI Girl Generator",
+    "AI Girl Generator"
+  ],
+  [
+    "nb::_STRING_:AI Anime Generator",
+    "AI Anime Generator"
+  ],
+  [
+    "nb::_STRING_:AI Video",
+    "AI Video"
+  ],
+  [
+    "nb::_STRING_:AI Talking Avatar",
+    "AI Snakkende Avatar"
+  ],
+  [
+    "nb::_STRING_:AI Video Face Swap",
+    "AI Video Face Swap"
+  ],
+  [
+    "nb::_STRING_:AI Meme Generator",
+    "AI Meme Generator"
+  ],
+  [
+    "nb::_STRING_:Runway",
+    "Runway"
+  ],
+  [
+    "nb::_STRING_:AI Chat",
+    "AI Chat"
+  ],
+  [
+    "nb::_STRING_:Flux Prompt Generator",
+    "Flux Prompt Generator"
+  ],
+  [
+    "nb::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "nb::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "nb::_STRING_:Bloom Magic",
+    "Bloom Magic"
+  ],
+  [
+    "nb::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "nb::_STRING_:Captain America",
+    "Captain America"
+  ],
+  [
+    "nb::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "nb::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "nb::_STRING_:Hulk Dive",
+    "Hulk Dive"
+  ],
+  [
+    "nb::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "nb::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "nl::_STRING_:Runway AI Video Generator",
+    "Runway AI Video Generator"
+  ],
+  [
+    "nl::_STRING_:Corporate Vision",
+    "Corporate Vision"
+  ],
+  [
+    "nl::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "nl::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "nl::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "nl::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "nl::_STRING_:AI Phantom",
+    "AI Phantom"
+  ],
+  [
+    "nl::_STRING_:AI Headshot Generator",
+    "AI Headshot Generator"
+  ],
+  [
+    "nl::_STRING_:AI Headshot",
+    "AI Headshot"
+  ],
+  [
+    "nl::_STRING_:AI Anime Generator",
+    "AI Anime Generator"
+  ],
+  [
+    "nl::_STRING_:AI Video",
+    "AI Video"
+  ],
+  [
+    "nl::_STRING_:AI Video Face Swap",
+    "AI Video Face Swap"
+  ],
+  [
+    "nl::_STRING_:AI Meme Generator",
+    "AI Meme Generator"
+  ],
+  [
+    "nl::_STRING_:Veo3 Video Generator",
+    "Veo3 Video Generator"
+  ],
+  [
+    "nl::_STRING_:Runway",
+    "Runway"
+  ],
+  [
+    "nl::_STRING_:AI Song Generator",
+    "AI Song Generator"
+  ],
+  [
+    "nl::_STRING_:AI Chat",
+    "AI Chat"
+  ],
+  [
+    "nl::_STRING_:Flux Prompt Generator",
+    "Flux Prompt Generator"
+  ],
+  [
+    "nl::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "nl::_STRING_:Social Media Frame",
+    "Social Media Frame"
+  ],
+  [
+    "nl::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "nl::_STRING_:Bloom Magic",
+    "Bloom Magic"
+  ],
+  [
+    "nl::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "nl::_STRING_:Captain America",
+    "Captain America"
+  ],
+  [
+    "nl::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "nl::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "nl::_STRING_:Hulk Dive",
+    "Hulk Duik"
+  ],
+  [
+    "nl::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "nl::_STRING_:Tools",
+    "Gereedschap"
+  ],
+  [
+    "nl::_STRING_:Help",
+    "Help"
+  ],
+  [
+    "nl::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "nl::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "pl::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "pl::_STRING_:Corporate Vision",
+    "Wizja korporacyjna"
+  ],
+  [
+    "pl::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "pl::_STRING_:Capture Every Angle of Any Scene",
+    "Uchwyć każdy kąt dowolnej sceny"
+  ],
+  [
+    "pl::_STRING_:Built with Real-World Understanding",
+    "Zbudowane z wykorzystaniem zrozumienia świata rzeczywistego"
+  ],
+  [
+    "pl::_STRING_:A New Era of Visual Effects",
+    "Nowa era efektów wizualnych"
+  ],
+  [
+    "pl::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "pl::_STRING_:Independent Filmmaker",
+    "Niezależny twórca filmowy"
+  ],
+  [
+    "pl::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "pl::_STRING_:Creative Director",
+    "Dyrektor kreatywny"
+  ],
+  [
+    "pl::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "pl::_STRING_:AI Phantom",
+    "AI Phantom"
+  ],
+  [
+    "pl::_STRING_:Runway",
+    "Pas startowy"
+  ],
+  [
+    "pl::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "pl::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "pl::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "pl::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "pl::_STRING_:Cap Walk",
+    "Spacer po Kapitanie"
+  ],
+  [
+    "pl::_STRING_:Hulk Dive",
+    "Hulk Nurkuj"
+  ],
+  [
+    "pl::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "pl::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "pl::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "pl::_STRING_:Email",
+    "Email"
+  ],
+  [
+    "pt::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "pt::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "pt::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "pt::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "pt::_STRING_:AI Image",
+    "Imagem de IA"
+  ],
+  [
+    "pt::_STRING_:AI Phantom",
+    "AI Phantom"
+  ],
+  [
+    "pt::_STRING_:Runway",
+    "Pista"
+  ],
+  [
+    "pt::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "pt::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "pt::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "pt::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "pt::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "pt::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "pt::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "pt::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "pt::_STRING_:Email",
+    "Email"
+  ],
+  [
+    "ru::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "ru::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "ru::_STRING_:Capture Every Angle of Any Scene",
+    "Запечатлейте каждый ракурс любой сцены"
+  ],
+  [
+    "ru::_STRING_:Built with Real-World Understanding",
+    "Создано с пониманием реального мира"
+  ],
+  [
+    "ru::_STRING_:A New Era of Visual Effects",
+    "Новая эра визуальных эффектов"
+  ],
+  [
+    "ru::_STRING_:Emily Chen",
+    "Эмили Чен"
+  ],
+  [
+    "ru::_STRING_:Independent Filmmaker",
+    "Независимый кинорежиссер"
+  ],
+  [
+    "ru::_STRING_:David Morales",
+    "Дэвид Моралес"
+  ],
+  [
+    "ru::_STRING_:Creative Director",
+    "Креативный директор"
+  ],
+  [
+    "ru::_STRING_:Lily Zhang",
+    "Лилия Чжан"
+  ],
+  [
+    "ru::_STRING_:AI Image",
+    "AI Изображение"
+  ],
+  [
+    "ru::_STRING_:AI Phantom",
+    "AI Phantom"
+  ],
+  [
+    "ru::_STRING_:AI Headshot",
+    "AI Портрет"
+  ],
+  [
+    "ru::_STRING_:AI Image Face Swap",
+    "AI Image Face Swap"
+  ],
+  [
+    "ru::_STRING_:Image Upscaler",
+    "Image Upscaler"
+  ],
+  [
+    "ru::_STRING_:Flux Image Generator",
+    "Генератор изображений Flux"
+  ],
+  [
+    "ru::_STRING_:Ideogram Image Generator",
+    "Генератор изображений идеограмм"
+  ],
+  [
+    "ru::_STRING_:Recraft V3 Image Generator",
+    "Recraft V3 Image Generator"
+  ],
+  [
+    "ru::_STRING_:Midjourney Image Generator",
+    "Генератор изображений Midjourney"
+  ],
+  [
+    "ru::_STRING_:GPT Image Generator",
+    "Генератор изображений GPT"
+  ],
+  [
+    "ru::_STRING_:AI Photo Effects",
+    "AI Фотоэффекты"
+  ],
+  [
+    "ru::_STRING_:Flux Kontext Image Generator",
+    "Генератор изображений Flux Kontext"
+  ],
+  [
+    "ru::_STRING_:AI Video",
+    "AI Видео"
+  ],
+  [
+    "ru::_STRING_:AI Talking Avatar",
+    "AI Говорящий Аватар"
+  ],
+  [
+    "ru::_STRING_:AI Video Face Swap",
+    "AI Video Face Swap"
+  ],
+  [
+    "ru::_STRING_:AI Dance",
+    "AI Танец"
+  ],
+  [
+    "ru::_STRING_:Image to Video",
+    "Изображение в видео"
+  ],
+  [
+    "ru::_STRING_:Text to Video",
+    "Текст в видео"
+  ],
+  [
+    "ru::_STRING_:AI Video Effects",
+    "Эффекты AI Video"
+  ],
+  [
+    "ru::_STRING_:Veo3 Video Generator",
+    "Veo3 Video Generator"
+  ],
+  [
+    "ru::_STRING_:Runway",
+    "Взлетно-посадочная полоса"
+  ],
+  [
+    "ru::_STRING_:AI Chat",
+    "AI Чат"
+  ],
+  [
+    "ru::_STRING_:Flux Prompt Generator",
+    "Генератор подсказок Flux"
+  ],
+  [
+    "ru::_STRING_:AI Assistant",
+    "AI Ассистент"
+  ],
+  [
+    "ru::_STRING_:Photo Effects",
+    "Фотоэффекты"
+  ],
+  [
+    "ru::_STRING_:3D Photo Frame",
+    "3D Фоторамка"
+  ],
+  [
+    "ru::_STRING_:Ghibli",
+    "Гибли"
+  ],
+  [
+    "ru::_STRING_:Wonderful Portal",
+    "Замечательный портал"
+  ],
+  [
+    "ru::_STRING_:Q Version",
+    "Q Версия"
+  ],
+  [
+    "ru::_STRING_:Digimon Illustrations",
+    "Digimon Иллюстрации"
+  ],
+  [
+    "ru::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "ru::_STRING_:Stick Figure",
+    "Стикме́н"
+  ],
+  [
+    "ru::_STRING_:Video Effects",
+    "Видеоэффекты"
+  ],
+  [
+    "ru::_STRING_:AI Kissing",
+    "AI Поцелуй"
+  ],
+  [
+    "ru::_STRING_:AI Hug",
+    "AI Hug"
+  ],
+  [
+    "ru::_STRING_:Bloom Magic",
+    "Bloom Magic"
+  ],
+  [
+    "ru::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "ru::_STRING_:Captain America",
+    "Капитан Америка"
+  ],
+  [
+    "ru::_STRING_:Hulk",
+    "Халк"
+  ],
+  [
+    "ru::_STRING_:Cap Walk",
+    "Прогулка по кепке"
+  ],
+  [
+    "ru::_STRING_:Hulk Dive",
+    "Hulk Dive"
+  ],
+  [
+    "ru::_STRING_:Flying",
+    "Летать"
+  ],
+  [
+    "ru::_STRING_:Cartoon Dol",
+    "Мультфильм Дол"
+  ],
+  [
+    "ru::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "ru::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "ru::_STRING_:Email",
+    "Email"
+  ],
+  [
+    "th::_STRING_:Runway AI Video Generator",
+    "Runway AI Video Generator"
+  ],
+  [
+    "th::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "th::_STRING_:AI Awards 2024",
+    "AI Awards 2024"
+  ],
+  [
+    "th::_STRING_:Capture Every Angle of Any Scene",
+    "บันทึกทุกมุมมองของทุกฉาก"
+  ],
+  [
+    "th::_STRING_:Built with Real-World Understanding",
+    "สร้างขึ้นด้วยความเข้าใจโลกแห่งความเป็นจริง"
+  ],
+  [
+    "th::_STRING_:A New Era of Visual Effects",
+    "ยุคใหม่ของวิชวลเอฟเฟกต์"
+  ],
+  [
+    "th::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "th::_STRING_:David Morales",
+    "เดวิด โมราเลส"
+  ],
+  [
+    "th::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "th::_STRING_:AI Image",
+    "รูปภาพ AI"
+  ],
+  [
+    "th::_STRING_:AI Image Generator",
+    "เครื่องสร้างภาพ AI"
+  ],
+  [
+    "th::_STRING_:AI Image Editor",
+    "AI Image Editor"
+  ],
+  [
+    "th::_STRING_:AI Background Remover",
+    "AI Background Remover"
+  ],
+  [
+    "th::_STRING_:AI Phantom",
+    "AI แฟนทอม"
+  ],
+  [
+    "th::_STRING_:AI Headshot Generator",
+    "เครื่องสร้างภาพถ่ายบุคคล AI"
+  ],
+  [
+    "th::_STRING_:AI Headshot",
+    "ภาพถ่ายบุคคล AI"
+  ],
+  [
+    "th::_STRING_:AI Image Face Swap",
+    "การสลับใบหน้าของภาพ AI"
+  ],
+  [
+    "th::_STRING_:Image Upscaler",
+    "Image Upscaler"
+  ],
+  [
+    "th::_STRING_:AI Girl Generator",
+    "AI Girl Generator"
+  ],
+  [
+    "th::_STRING_:AI Anime Generator",
+    "AI Anime Generator"
+  ],
+  [
+    "th::_STRING_:Flux Image Generator",
+    "เครื่องสร้างภาพ Flux"
+  ],
+  [
+    "th::_STRING_:Ideogram Image Generator",
+    "เครื่องสร้างภาพไอเดียแกรม"
+  ],
+  [
+    "th::_STRING_:Recraft V3 Image Generator",
+    "Recraft V3 Image Generator"
+  ],
+  [
+    "th::_STRING_:Midjourney Image Generator",
+    "เครื่องสร้างภาพ Midjourney"
+  ],
+  [
+    "th::_STRING_:GPT Image Generator",
+    "เครื่องสร้างภาพ GPT"
+  ],
+  [
+    "th::_STRING_:AI Photo Effects",
+    "เอฟเฟกต์ภาพถ่าย AI"
+  ],
+  [
+    "th::_STRING_:Flux Kontext Image Generator",
+    "Flux Kontext Image Generator"
+  ],
+  [
+    "th::_STRING_:AI Video",
+    "วิดีโอ AI"
+  ],
+  [
+    "th::_STRING_:AI Video Generator",
+    "เครื่องสร้างวิดีโอ AI"
+  ],
+  [
+    "th::_STRING_:AI Talking Avatar",
+    "AI Talking Avatar"
+  ],
+  [
+    "th::_STRING_:AI Video Face Swap",
+    "AI Video Face Swap"
+  ],
+  [
+    "th::_STRING_:AI Dance Generator",
+    "AI Dance Generator"
+  ],
+  [
+    "th::_STRING_:AI Dance",
+    "AI เต้นรำ"
+  ],
+  [
+    "th::_STRING_:Image to Video",
+    "รูปภาพเป็นวิดีโอ"
+  ],
+  [
+    "th::_STRING_:Text to Video",
+    "Text to Video"
+  ],
+  [
+    "th::_STRING_:AI Meme Generator",
+    "เครื่องสร้างมส์ AI"
+  ],
+  [
+    "th::_STRING_:AI Video Effects",
+    "เอฟเฟกต์วิดีโอ AI"
+  ],
+  [
+    "th::_STRING_:Veo3 Video Generator",
+    "Veo3 Video Generator"
+  ],
+  [
+    "th::_STRING_:Runway",
+    "รันเวย์"
+  ],
+  [
+    "th::_STRING_:AI Music Generator",
+    "เครื่องสร้างเพลง AI"
+  ],
+  [
+    "th::_STRING_:AI Song Generator",
+    "เครื่องสร้างเพลง AI"
+  ],
+  [
+    "th::_STRING_:AI Chat",
+    "แชท AI"
+  ],
+  [
+    "th::_STRING_:Flux Prompt Generator",
+    "เครื่องมือสร้างพรอมต์ Flux"
+  ],
+  [
+    "th::_STRING_:Image Prompt Generator",
+    "Image Prompt Generator"
+  ],
+  [
+    "th::_STRING_:AI Assistant",
+    "ผู้ช่วย AI"
+  ],
+  [
+    "th::_STRING_:Photo Effects",
+    "เอฟเฟกต์ภาพถ่าย"
+  ],
+  [
+    "th::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "th::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "th::_STRING_:Stick Figure",
+    "หุ่นไม้ขีด"
+  ],
+  [
+    "th::_STRING_:AI Kissing",
+    "จูบ AI"
+  ],
+  [
+    "th::_STRING_:AI Hug",
+    "AI Hug"
+  ],
+  [
+    "th::_STRING_:Bloom Magic",
+    "Bloom Magic"
+  ],
+  [
+    "th::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "th::_STRING_:Captain America",
+    "กัปตันอเมริกา"
+  ],
+  [
+    "th::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "th::_STRING_:Cap Walk",
+    "Cap Walk"
+  ],
+  [
+    "th::_STRING_:Hulk Dive",
+    "Hulk Dive"
+  ],
+  [
+    "th::_STRING_:Flying",
+    "บิน"
+  ],
+  [
+    "th::_STRING_:Cartoon Dol",
+    "Cartoon Dol"
+  ],
+  [
+    "th::_STRING_:Romantic Lift",
+    "Romantic Lift"
+  ],
+  [
+    "th::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "th::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "tr::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "tr::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "tr::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "tr::_STRING_:AI Video",
+    "AI Video"
+  ],
+  [
+    "tr::_STRING_:Ghibli",
+    "Ghibli"
+  ],
+  [
+    "tr::_STRING_:Pixar 3D",
+    "Pixar 3D"
+  ],
+  [
+    "tr::_STRING_:Bloom Magic",
+    "Bloom Magic"
+  ],
+  [
+    "tr::_STRING_:Bodyshake",
+    "Bodyshake"
+  ],
+  [
+    "tr::_STRING_:Hulk",
+    "Hulk"
+  ],
+  [
+    "tr::_STRING_:Blog",
+    "Blog"
+  ],
+  [
+    "tr::_STRING_:Android",
+    "Android"
+  ],
+  [
+    "tr::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "tw::_STRING_:Emily Chen",
+    "Emily Chen"
+  ],
+  [
+    "tw::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "tw::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "tw::_STRING_:Runway",
+    "Runway"
+  ],
+  [
+    "tw::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "zh::_STRING_:Emily Chen",
+    "艾米丽·陈"
+  ],
+  [
+    "zh::_STRING_:David Morales",
+    "David Morales"
+  ],
+  [
+    "zh::_STRING_:Lily Zhang",
+    "Lily Zhang"
+  ],
+  [
+    "zh::_STRING_:Runway",
+    "跑道"
+  ],
+  [
+    "zh::_STRING_:Windows",
+    "Windows"
+  ],
+  [
+    "fr::_STRING_:Narration",
+    "Narration"
+  ],
+  [
+    "id::_STRING_:Edit",
+    "Edit"
+  ],
+  [
+    "id::_STRING_:Video",
+    "Video"
+  ],
+  [
+    "it::_STRING_:Video",
+    "Video"
+  ],
+  [
+    "nb::_STRING_:Video",
+    "Video"
+  ],
+  [
+    "nl::_STRING_:Video",
+    "Video"
+  ],
+  [
+    "th::_STRING_:AI Script Writer",
+    "นักเขียนสคริปต์ AI"
+  ],
+  [
+    "tr::_STRING_:Video",
+    "Video"
   ]
 ]

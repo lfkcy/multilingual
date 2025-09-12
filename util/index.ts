@@ -17,15 +17,7 @@ function flatten(obj: any, prefix = "", result: Record<string, any> = {}) {
     const newKey = prefix ? `${prefix}.${key}` : key;
 
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      // 检查是否为 step 对象
-      if (key === "step") {
-        // 重新映射索引从0开始
-        Object.keys(value).forEach((stepKey, index) => {
-          result[`${prefix}.${key}.${index}`] = value[stepKey];
-        });
-      } else {
-        flatten(value, newKey, result);
-      }
+      flatten(value, newKey, result);
     } else if (Array.isArray(value)) {
       value.forEach((item, index) => {
         if (typeof item === "object" && item !== null) {

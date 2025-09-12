@@ -1,7 +1,7 @@
-import { flatten, isJsonChanged, unflattenJSON } from ".";
 import { logChanges } from "./logger";
 import { translator } from "./translator";
 import { ossUtil, OSS_LANG_DIR } from "./oss";
+import { isJsonChanged, unflattenJSON, flatten } from ".";
 
 interface SyncI18nOptions {
   currentVersion: string; // 当前版本 --- 准备上传的版本
@@ -76,9 +76,7 @@ export async function run({
   }
 
   // --- 3. 差异比对 ---
-  // 这里我们不再直接使用 flatten/unflatten 进行逐条对比，
-  // 而是会逐个顶层键进行 JSON 段的翻译和合并。
-  // 但是 `isJsonChanged` 仍然可以用来判断整体 en.json 是否需要处理。
+  // 这里使用 flatten 将所有嵌套键值对都拉平，方便逐键对比。
   const flatEn = flatten(currentEnJsonContent);
   const flatEnOld = flatten(stableEnJsonContent);
 
@@ -93,7 +91,7 @@ export async function run({
 
   // --- 4. 处理新增和修改的字段（触发翻译） ---
   let langFiles: string[] = [];
-  const allUpdatedLangContents: { [lang: string]: string } = {};// 用于暂存所有语言的更新内容，等待所有处理完成后再统一上传
+  const allUpdatedLangContents: { [lang: string]: string } = {}; // 用于暂存所有语言的更新内容，等待所有处理完成后再统一上传
 
   // 获取所有 lang 文件（排除 en/en_stable）
   try {
@@ -136,77 +134,84 @@ export async function run({
       targetLangJsonContent = {};
     }
 
-    const updatedTargetLangJson: Record<string, any> = { ...targetLangJsonContent }; // 更新后的目标语言 JSON 内容
+    // 将目标语言文件也拍平，以便进行增量合并
+    const flatTargetLang = flatten(targetLangJsonContent);
+    const updatedFlatTargetLang: Record<string, any> = { ...flatTargetLang };
+
     const changes = {
       added: [] as string[],
       updated: [] as string[],
       removed: [] as string[],
     };
 
-    // 遍历 en.json 的顶层键，进行逐段翻译
-    for (const topLevelKey in currentEnJsonContent) {
-      if (Object.prototype.hasOwnProperty.call(currentEnJsonContent, topLevelKey)) {
-        const enSection = { [topLevelKey]: currentEnJsonContent[topLevelKey] }; // 提取当前顶层键对应的 JSON 片段
-        const enOldSection = { [topLevelKey]: stableEnJsonContent[topLevelKey] };
+    const keysToTranslate: string[] = [];
 
-        // 检查这一段英文 JSON 是否有变化
-        const flatEnSection = flatten(enSection);
-        const flatEnOldSection = flatten(enOldSection);
-
-        // 如果这一段英文 JSON 是新的或者有变化，则进行翻译
-        if (!Object.prototype.hasOwnProperty.call(stableEnJsonContent, topLevelKey) || isJsonChanged(flatEnSection, flatEnOldSection)) {
-          console.log(`--- 正在翻译 ${lang} 的片段: ${topLevelKey} ---`);
-          try {
-            const translatedSectionJsonString = await translator.translateSingleJsonChunk(
-              JSON.stringify(enSection, null, 2), // 传入格式化的 JSON 片段
-              lang
-            );
-            const translatedSection = JSON.parse(translatedSectionJsonString);
-            // 将翻译后的片段合并到总的目标语言 JSON 对象中
-            updatedTargetLangJson[topLevelKey] = translatedSection[topLevelKey];
-
-            // 记录变化（这里可能需要更细致的记录，例如记录具体哪个内部的key发生了变化）
-            // 目前简化为如果整个段落被翻译/更新，就记录顶层key
-            if (!Object.prototype.hasOwnProperty.call(targetLangJsonContent, topLevelKey)) {
-              changes.added.push(topLevelKey);
-            } else {
-              changes.updated.push(topLevelKey);
-            }
-
-          } catch (error) {
-            console.error(`❌ 翻译 JSON 片段 "${topLevelKey}" 失败，将使用原始英文片段。`, error);
-            // 翻译失败时，保留原始英文值或旧的目标语言值（如果存在）
-            updatedTargetLangJson[topLevelKey] = targetLangJsonContent[topLevelKey] || currentEnJsonContent[topLevelKey];
-          }
+    // --- 找出所有需要翻译的新增和修改的键 ---
+    for (const key in flatEn) {
+      // 如果 en.json 中有新键，或者键值发生了变化，则标记为需要翻译
+      if (!Object.prototype.hasOwnProperty.call(flatEnOld, key)) {
+        changes.added.push(key);
+        keysToTranslate.push(key);
+      } else if (flatEn[key] !== flatEnOld[key]) {
+        changes.updated.push(key);
+        keysToTranslate.push(key);
+      } else {
+        // 如果键没有变化，并且目标语言中已有翻译，则直接保留
+        if (Object.prototype.hasOwnProperty.call(flatTargetLang, key)) {
+          updatedFlatTargetLang[key] = flatTargetLang[key];
         } else {
-          // 如果英文片段没有变化，则直接保留目标语言中对应的旧值
-          updatedTargetLangJson[topLevelKey] = targetLangJsonContent[topLevelKey];
+          // 如果没有变化但目标语言中没有，也放入待翻译列表
+          keysToTranslate.push(key);
         }
       }
     }
 
-    // 🔥 删除 en.json 中已经移除的顶层 key
-    for (const topLevelKey in targetLangJsonContent) {
-      if (Object.prototype.hasOwnProperty.call(targetLangJsonContent, topLevelKey)) {
-        if (!Object.prototype.hasOwnProperty.call(currentEnJsonContent, topLevelKey)) {
-          delete updatedTargetLangJson[topLevelKey];
-          changes.removed.push(topLevelKey);
+    // --- 批量翻译需要处理的键 ---
+    if (keysToTranslate.length > 0) {
+      console.log(
+        `--- 正在翻译 ${lang} 的 ${keysToTranslate.length} 个键... ---`
+      );
+
+      // 构建一个只包含需要翻译的键值对的 JSON 对象
+      const jsonToTranslate: Record<string, any> = {};
+      for (const key of keysToTranslate) {
+        jsonToTranslate[key] = flatEn[key];
+      }
+
+      try {
+        const translatedJsonString = await translator.translateSingleJsonChunk(
+          JSON.stringify(jsonToTranslate, null, 2),
+          lang
+        );
+        const translatedFlatJson = JSON.parse(translatedJsonString);
+
+        // 将翻译结果合并到更新后的目标语言扁平对象中
+        for (const key in translatedFlatJson) {
+          updatedFlatTargetLang[key] = translatedFlatJson[key];
+        }
+      } catch (error) {
+        console.error(`❌ 翻译 JSON 片段失败，将使用原始英文片段。`, error);
+        // 翻译失败时，将英文原文合并进去
+        for (const key of keysToTranslate) {
+          updatedFlatTargetLang[key] = flatEn[key];
         }
       }
     }
 
+    // 🔥 找出 en.json 中已移除的键，并在目标语言中也移除
+    for (const key in flatEnOld) {
+      if (!Object.prototype.hasOwnProperty.call(flatEn, key)) {
+        delete updatedFlatTargetLang[key];
+        changes.removed.push(key);
+      }
+    }
+
+    // 将拍平后的对象还原成嵌套 JSON
+    const updatedTargetLangJson = unflattenJSON(updatedFlatTargetLang);
     const prettyJson = JSON.stringify(updatedTargetLangJson, null, 2);
     logChanges(lang, changes);
 
     allUpdatedLangContents[lang] = prettyJson; // 将处理后的内容存储在内存中，不立即上传
-
-    // try {
-    //   const ossPath = `${OSS_VERSIONED_LANG_DIR}${lang}.json`;
-    //   await ossUtil.uploadFile(ossPath, prettyJson);
-    // } catch (error) {
-    //   console.error("上传目标语言文件失败", error);
-    //   throw error;
-    // }
 
     const endTime = new Date();
     console.log(
@@ -218,7 +223,9 @@ export async function run({
   }
 
   // --- 6. 统一上传所有处理完成的语言文件 ---
-  console.log(`\n☁️ 开始统一上传所有语言文件到 OSS 版本目录: ${currentVersion}`);
+  console.log(
+    `\n☁️ 开始统一上传所有语言文件到 OSS 版本目录: ${currentVersion}`
+  );
   for (const lang of langs) {
     const content = allUpdatedLangContents[lang]; // 同步后的语言
     if (content) {
@@ -227,7 +234,11 @@ export async function run({
         await ossUtil.uploadFile(ossPath, content);
         console.log(`✅ 已上传 ${lang}.json 到 ${ossPath}`);
       } catch (error: any) {
-        console.error(`❌ 上传 ${lang}.json 失败到 ${ossPath}，错误：${error?.message || 'error'}`);
+        console.error(
+          `❌ 上传 ${lang}.json 失败到 ${ossPath}，错误：${
+            error?.message || "error"
+          }`
+        );
         // 如果这里上传失败，根据严格原子性原则，应该回滚或抛出致命错误
         throw error; // 严格中断，如果单个文件上传失败
       }
