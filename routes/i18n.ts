@@ -2,7 +2,8 @@ import express from "express";
 import path from "path";
 import { ChildProcess, fork } from "child_process";
 import { acquireLock, releaseLock } from "../util";
-import { ossUtil, OSS_LANG_DIR } from "../util/oss";
+import { getOssUtil, OSS_LANG_DIR } from "../util/oss";
+import { apiKeyAuth } from "../util/middleware";
 
 const router = express.Router();
 
@@ -80,7 +81,8 @@ async function terminateCurrentSyncProcess(): Promise<void> {
  * @returns {Promise<{code: number, message: string, error?: string}>}
  */
 async function executeI18nSync(
-  uploadedEnJsonContent: string | null = null
+  uploadedEnJsonContent: string | null = null,
+  projectId: string | null = null
 ): Promise<{
   code: number;
   message: string;
@@ -101,19 +103,23 @@ async function executeI18nSync(
 
     try {
       // 3. 启动新的同步任务
-      console.log("启动新的多语言同步任务...");
+      console.log(`[${projectId}] 启动新的多语言同步任务...`);
 
-      // 启动子进程，并将 uploadedEnJsonContent 作为参数传递
+      // 组装传递给子进程的参数数组
+      const forkArgs: string[] = [];
+      if (projectId) {
+        forkArgs.push("--project-id", projectId);
+      }
+      if (uploadedEnJsonContent) {
+        forkArgs.push(
+          "--en-json-content",
+          Buffer.from(uploadedEnJsonContent).toString("base64")
+        );
+      }
+
+      // 启动子进程，并将 uploadedEnJsonContent，projectId 作为参数传递
       // 子进程会处理接收到的内容，或自行从 OSS/本地获取
-      const newSyncProcess = fork(
-        SYNC_SCRIPT_PATH,
-        uploadedEnJsonContent
-          ? [
-              "--en-json-content",
-              Buffer.from(uploadedEnJsonContent).toString("base64"),
-            ]
-          : []
-      );
+      const newSyncProcess = fork(SYNC_SCRIPT_PATH, forkArgs);
 
       currentSyncProcess = newSyncProcess; // 保存新进程的引用
       currentSyncProcessPromise = null; // 清除旧 Promise，因为我们现在有一个新的进程
@@ -179,9 +185,14 @@ async function executeI18nSync(
 // 获取所有语言列表
 router.get(
   "/get-langs",
+  apiKeyAuth,
   async (req: express.Request, res: express.Response) => {
     const { version } = req.query;
+    const projectId = (req as any).projectId;
+
     try {
+      const ossUtil = getOssUtil(projectId);
+
       const files = await ossUtil.listJsonFilesInDirectory(
         `${OSS_LANG_DIR}${version}/`
       );
@@ -203,8 +214,11 @@ router.get(
 );
 
 // 获取指定语言的 JSON
-router.get("/get-lang", async (req: any, res: any) => {
+router.get("/get-lang", apiKeyAuth, async (req: any, res: any) => {
   const { lang, version } = req.query;
+  const projectId = (req as any).projectId;
+  const ossUtil = getOssUtil(projectId);
+
   try {
     const filePath = await ossUtil.getFileContent(
       `${OSS_LANG_DIR}${version}/${lang}.json`
@@ -228,8 +242,11 @@ router.get("/get-lang", async (req: any, res: any) => {
 });
 
 // 获取版本列表
-router.get("/get-versions", async (req: any, res: any) => {
+router.get("/get-versions", apiKeyAuth, async (req: any, res: any) => {
   try {
+    const projectId = (req as any).projectId;
+    const ossUtil = getOssUtil(projectId);
+
     const versions = await ossUtil.listLanguageVersions(OSS_LANG_DIR);
     res.json({
       code: 0,
@@ -246,8 +263,11 @@ router.get("/get-versions", async (req: any, res: any) => {
 });
 
 // 上传/更新指定语言的 JSON
-router.post("/update-lang", async (req: any, res: any) => {
+router.post("/update-lang", apiKeyAuth, async (req: any, res: any) => {
   let version = ""; // 版本号
+  const projectId = (req as any).projectId;
+  const ossUtil = getOssUtil(projectId);
+
   try {
     if (!req.files.version) {
       // 如果版本号为空，则获取最新版本
@@ -304,12 +324,13 @@ router.post("/update-lang", async (req: any, res: any) => {
   try {
     // 解析上传的 JSON 内容
     const jsonContent = JSON.parse(uploadedFile.data.toString());
+    const ossUtil = getOssUtil(projectId);
 
     // 如果是 en，写入后自动触发多语言同步 --- 默认是最新版本
     if (lang === "en") {
       const jsonContent = uploadedFile.data.toString(); // 保持为字符串，传递给子进程
 
-      const syncResult = await executeI18nSync(jsonContent);
+      const syncResult = await executeI18nSync(jsonContent, projectId);
       if (syncResult.code === 0) {
         return res.json({
           code: 0,

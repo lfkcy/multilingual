@@ -27,14 +27,25 @@ async function executeSync() {
       }
     }
 
-    // --- 2. 生成当前时间戳作为版本号 ---
+    // --- 2. 解析传入的 projectId ---
+    let projectId: string | null = null;
+    const projectIdIndex = process.argv.indexOf("--project-id");
+    if (projectIdIndex > -1 && process.argv[projectIdIndex + 1]) {
+      projectId = process.argv[projectIdIndex + 1];
+      console.log(`[runI18nSync] 接收到项目 ID: ${projectId}`);
+    } else {
+      console.warn(`[runI18nSync] 没有接收到项目 ID，将使用默认 OSS 路径`);
+    }
+
+    // --- 3. 生成当前时间戳作为版本号 ---
     const currentVersion = generateTimestampVersion();
     console.log(`[runI18nSync] 本次同步任务的版本号: ${currentVersion}`);
 
-    console.log("子进程：开始执行多语言同步...");
+    console.log(`[${projectId}] 子进程：开始执行多语言同步...`);
     await syncI18n({
       currentVersion,
       uploadedEnJsonContent: enJsonStringFromArg,
+      projectId,
     });
     console.log(
       `[runI18nSync] 多语言同步任务 (版本: ${currentVersion}) 已完成。`

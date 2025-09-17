@@ -3290,5 +3290,665 @@
   [
     "tr::_STRING_:Video",
     "Video"
+  ],
+  [
+    "da::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "da::_STRING_:T2V Leaderboard",
+    "T2V Leaderboard"
+  ],
+  [
+    "da::_STRING_:I2V Leaderboard",
+    "I2V Leaderboard"
+  ],
+  [
+    "de::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "es::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "fr::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "id::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "it::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "ja::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "ko::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "nb::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "nb::_STRING_:Text-to-Image Radar Chart",
+    "Tekst-til-bilde Radardiagram"
+  ],
+  [
+    "nb::_STRING_:Single-Image Editing Radar Chart",
+    "Redigering av radardiagram for enkeltbilde"
+  ],
+  [
+    "nb::_STRING_:T2V Leaderboard",
+    "T2V Leaderboard"
+  ],
+  [
+    "nb::_STRING_:I2V Leaderboard",
+    "I2V Leaderboard"
+  ],
+  [
+    "nl::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "nl::_STRING_:T2V Leaderboard",
+    "T2V Leaderboard"
+  ],
+  [
+    "nl::_STRING_:I2V Leaderboard",
+    "I2V Leaderboard"
+  ],
+  [
+    "pl::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "pt::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "ru::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "th::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "tr::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "tw::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "zh::_STRING_:Seedream 4.0",
+    "Seedream 4.0"
+  ],
+  [
+    "da::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "da::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "da::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "da::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "de::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "de::_STRING_:Digital Artist",
+    "Digitaler Künstler"
+  ],
+  [
+    "de::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "de::_STRING_:Head of Marketing",
+    "Leiter Marketing"
+  ],
+  [
+    "de::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "de::_STRING_:Indie Game Developer",
+    "Unabhängiger Spieleentwickler"
+  ],
+  [
+    "de::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "de::_STRING_:Marketing",
+    "Marketing"
+  ],
+  [
+    "de::_STRING_:Social Media",
+    "Soziale Medien"
+  ],
+  [
+    "es::_STRING_:no credit card required",
+    "No se requiere tarjeta de crédito"
+  ],
+  [
+    "es::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "es::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "es::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "es::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "es::_STRING_:Marketing",
+    "Marketing"
+  ],
+  [
+    "fr::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "fr::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "fr::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "fr::_STRING_:Emily",
+    "Émilie"
+  ],
+  [
+    "fr::_STRING_:Marketing",
+    "Marketing"
+  ],
+  [
+    "id::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "id::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "id::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "id::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "it::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "it::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "it::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "it::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "it::_STRING_:Marketing",
+    "Marketing"
+  ],
+  [
+    "ja::_STRING_:Sarah J.",
+    "サラJ."
+  ],
+  [
+    "ja::_STRING_:Mark Chen",
+    "マーク・チェン"
+  ],
+  [
+    "ja::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "ja::_STRING_:Emily",
+    "エミリー"
+  ],
+  [
+    "ko::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "ko::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "ko::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "ko::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "nb::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "nb::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "nb::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "nb::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "nl::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "nl::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "nl::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "nl::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "nl::_STRING_:Marketing",
+    "Marketing"
+  ],
+  [
+    "pl::_STRING_:no credit card required",
+    "Karta kredytowa nie jest wymagana"
+  ],
+  [
+    "pl::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "pl::_STRING_:Digital Artist",
+    "Artysta cyfrowy"
+  ],
+  [
+    "pl::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "pl::_STRING_:Head of Marketing",
+    "Szef marketingu"
+  ],
+  [
+    "pl::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "pl::_STRING_:Indie Game Developer",
+    "Niezależny twórca gier"
+  ],
+  [
+    "pl::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "pl::_STRING_:Marketing",
+    "Marketing"
+  ],
+  [
+    "pl::_STRING_:No credit card needed",
+    "Karta kredytowa nie jest wymagana"
+  ],
+  [
+    "pt::_STRING_:no credit card required",
+    "não é necessário cartão de crédito"
+  ],
+  [
+    "pt::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "pt::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "pt::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "pt::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "pt::_STRING_:Marketing",
+    "Marketing"
+  ],
+  [
+    "pt::_STRING_:No credit card needed",
+    "Não é necessário cartão de crédito"
+  ],
+  [
+    "th::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "th::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "th::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "th::_STRING_:Emily",
+    "เอมิลี"
+  ],
+  [
+    "tr::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "tr::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "tr::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "tr::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "tw::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "tw::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "tw::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "tw::_STRING_:Emily",
+    "Emily"
+  ],
+  [
+    "zh::_STRING_:Sarah J.",
+    "Sarah J."
+  ],
+  [
+    "zh::_STRING_:Mark Chen",
+    "Mark Chen"
+  ],
+  [
+    "zh::_STRING_:David L.",
+    "David L."
+  ],
+  [
+    "zh::_STRING_:Emily",
+    "艾米丽"
+  ],
+  [
+    "da::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "da::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "da::_STRING_:David",
+    "David"
+  ],
+  [
+    "da::_STRING_:Marketing",
+    "Marketing"
+  ],
+  [
+    "de::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "de::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "de::_STRING_:Marketing Manager",
+    "Marketing Manager"
+  ],
+  [
+    "de::_STRING_:David",
+    "David"
+  ],
+  [
+    "de::_STRING_:Game Developer",
+    "Game Entwickler"
+  ],
+  [
+    "es::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "es::_STRING_:Mark",
+    "Marcar"
+  ],
+  [
+    "es::_STRING_:David",
+    "David"
+  ],
+  [
+    "fr::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "fr::_STRING_:Mark",
+    "Marc"
+  ],
+  [
+    "fr::_STRING_:David",
+    "David"
+  ],
+  [
+    "id::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "id::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "id::_STRING_:David",
+    "David"
+  ],
+  [
+    "it::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "it::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "it::_STRING_:Marketing Manager",
+    "Responsabile marketing"
+  ],
+  [
+    "it::_STRING_:David",
+    "David"
+  ],
+  [
+    "it::_STRING_:Social Media",
+    "Social Media"
+  ],
+  [
+    "ja::_STRING_:Sarah",
+    "サラ"
+  ],
+  [
+    "ja::_STRING_:Mark",
+    "マーク"
+  ],
+  [
+    "ja::_STRING_:David",
+    "David"
+  ],
+  [
+    "ko::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "ko::_STRING_:Mark",
+    "마크"
+  ],
+  [
+    "ko::_STRING_:David",
+    "David"
+  ],
+  [
+    "nb::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "nb::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "nb::_STRING_:David",
+    "David"
+  ],
+  [
+    "nl::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "nl::_STRING_:Digital Artist",
+    "Digitale kunstenaar"
+  ],
+  [
+    "nl::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "nl::_STRING_:Marketing Manager",
+    "Marketing Manager"
+  ],
+  [
+    "nl::_STRING_:David",
+    "David"
+  ],
+  [
+    "nl::_STRING_:Game Developer",
+    "Game Ontwikkelaar"
+  ],
+  [
+    "nl::_STRING_:Creative Director",
+    "Creative Director"
+  ],
+  [
+    "pl::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "pl::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "pl::_STRING_:David",
+    "Dawid"
+  ],
+  [
+    "pt::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "pt::_STRING_:Mark",
+    "Marcar"
+  ],
+  [
+    "pt::_STRING_:David",
+    "David"
+  ],
+  [
+    "th::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "th::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "th::_STRING_:David",
+    "เดวิด"
+  ],
+  [
+    "tr::_STRING_:Sarah",
+    "Sarah"
+  ],
+  [
+    "tr::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "tr::_STRING_:David",
+    "David"
+  ],
+  [
+    "tw::_STRING_:Sarah",
+    "莎拉"
+  ],
+  [
+    "tw::_STRING_:Mark",
+    "Mark"
+  ],
+  [
+    "tw::_STRING_:David",
+    "David"
+  ],
+  [
+    "zh::_STRING_:Sarah",
+    "莎拉"
+  ],
+  [
+    "zh::_STRING_:Mark",
+    "马克"
+  ],
+  [
+    "zh::_STRING_:David",
+    "大卫"
   ]
 ]

@@ -1,21 +1,33 @@
 import { logChanges } from "./logger";
 import { translator } from "./translator";
-import { ossUtil, OSS_LANG_DIR } from "./oss";
+import { getOssUtil, OSS_LANG_DIR, OssUtil } from "./oss";
 import { isJsonChanged, unflattenJSON, flatten, chunkArray } from ".";
 
 interface SyncI18nOptions {
   currentVersion: string; // 当前版本 --- 准备上传的版本
   uploadedEnJsonContent: string | null; // 从 /update-lang 传入的 en.json 内容
+  projectId: string | null; // 从 /update-lang 传入的项目 ID
 }
 
 export async function run({
   currentVersion,
   uploadedEnJsonContent,
+  projectId,
 }: SyncI18nOptions) {
   console.log(`[syncI18n] 开始执行多语言同步，版本号: ${currentVersion}`);
 
   let latestVersion: string | null = null; // 最新版本 --- oss目录下的
+  let ossUtil: OssUtil | null = null;
 
+  // --- 初始化 OssUtil ---
+  try {
+    ossUtil = getOssUtil(projectId);
+  } catch (error) {
+    console.error("初始化 OssUtil 失败", error);
+    throw error;
+  }
+
+  // --- 获取最新版本 ---
   try {
     const versions = await ossUtil.listLanguageVersions(OSS_LANG_DIR);
     if (versions.includes(currentVersion)) {

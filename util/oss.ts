@@ -25,7 +25,7 @@ interface FileInfo {
 /**
  * OSS 工具类
  */
-class OssUtil {
+export class OssUtil {
   private client: OSS;
   private bucket: string;
 
@@ -292,7 +292,13 @@ class OssUtil {
 }
 
 // 配置和导出
-const ossConfig: OssConfig = {
+
+const OSS_LANG_DIR = "assets/lang/";
+// 存储已初始化的 OssUtil 实例的缓存
+const ossClients: Map<string, OssUtil> = new Map();
+
+// 从环境变量中获取一次基础 OSS 配置
+const baseOssConfig: OssConfig = {
   region: process.env.OSS_REGION!,
   accessKeyId: process.env.OSS_ACCESS_KEY_ID!,
   accessKeySecret: process.env.OSS_ACCESS_KEY_SECRET!,
@@ -300,8 +306,30 @@ const ossConfig: OssConfig = {
   secure: true,
 };
 
-const OSS_LANG_DIR = "assets/lang/";
+/**
+ * 获取或创建指定项目的 OssUtil 实例（单例模式）
+ * @param projectId 项目ID
+ * @returns {OssUtil} OssUtil 实例
+ */
+function getOssUtil(projectId: string | null): OssUtil {
+  if (!projectId) {
+    throw new Error("projectId 不能为空");
+  }
+  // 1. 如果缓存中已存在该项目的实例，直接返回
+  if (ossClients.has(projectId)) {
+    return ossClients.get(projectId)!;
+  }
 
-const ossUtil = new OssUtil(ossConfig);
+  // 2. 如果不存在，创建新的实例并缓存
+  console.log(`[OSS] 为项目 "${projectId}" 创建新的 OssUtil 实例`);
+  const newClient = new OssUtil({
+    ...baseOssConfig,
+    // 你可以在这里根据 projectId 调整配置，例如不同的 bucket
+    // bucket: process.env[`OSS_BUCKET_${projectId.toUpperCase()}`] || baseOssConfig.bucket,
+  });
 
-export { ossUtil, OSS_LANG_DIR };
+  ossClients.set(projectId, newClient);
+  return newClient;
+}
+
+export { getOssUtil, OSS_LANG_DIR };
