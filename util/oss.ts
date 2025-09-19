@@ -299,10 +299,10 @@ const ossClients: Map<string, OssUtil> = new Map();
 
 // 从环境变量中获取一次基础 OSS 配置
 const baseOssConfig: OssConfig = {
-  region: process.env.OSS_REGION!,
-  accessKeyId: process.env.OSS_ACCESS_KEY_ID!,
-  accessKeySecret: process.env.OSS_ACCESS_KEY_SECRET!,
-  bucket: process.env.OSS_BUCKET!,
+  region: process.env.Vidfly_OSS_REGION!,
+  accessKeyId: process.env.Vidfly_OSS_ACCESS_KEY_ID!,
+  accessKeySecret: process.env.Vidfly_OSS_ACCESS_KEY_SECRET!,
+  bucket: process.env.Vidfly_OSS_BUCKET!,
   secure: true,
 };
 
@@ -323,9 +323,12 @@ function getOssUtil(projectId: string | null): OssUtil {
   // 2. 如果不存在，创建新的实例并缓存
   console.log(`[OSS] 为项目 "${projectId}" 创建新的 OssUtil 实例`);
   const newClient = new OssUtil({
-    ...baseOssConfig,
-    // 你可以在这里根据 projectId 调整配置，例如不同的 bucket
-    // bucket: process.env[`OSS_BUCKET_${projectId.toUpperCase()}`] || baseOssConfig.bucket,
+    bucket: process.env[`${projectId.toUpperCase()}_OSS_BUCKET`]!,
+    region: process.env[`${projectId.toUpperCase()}_OSS_REGION`]!,
+    accessKeyId: process.env[`${projectId.toUpperCase()}_OSS_ACCESS_KEY_ID`]!,
+    accessKeySecret:
+      process.env[`${projectId.toUpperCase()}_OSS_ACCESS_KEY_SECRET`]!,
+    secure: true,
   });
 
   ossClients.set(projectId, newClient);

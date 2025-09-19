@@ -1,10 +1,16 @@
-require("dotenv").config(); // Load .env file
-
+import dotenv from "dotenv";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import fileUpload from "express-fileupload";
 import i18nRouter from "./routes/i18n";
+
+// 根据 NODE_ENV 环境变量加载不同的 .env 文件
+if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: ".env.production" });
+} else {
+  dotenv.config(); // 默认加载 .env
+}
 
 const app = express();
 const PORT = process.env.PORT || 8888;
