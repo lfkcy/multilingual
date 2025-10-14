@@ -9,5 +9,6 @@ lang/
 .env.production
 
 # 忽略 cache 目录
-cache/
+cache/translation_cache.json
+cache/translation_progress.json
 

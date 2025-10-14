@@ -2,17 +2,22 @@ import { logChanges } from "./logger";
 import { translator } from "./translator";
 import { getOssUtil, OSS_LANG_DIR, OssUtil } from "./oss";
 import { isJsonChanged, unflattenJSON, flatten, chunkArray } from ".";
+import { createCommitIdVersionMapping } from "./versioning";
 
 interface SyncI18nOptions {
   currentVersion: string; // 当前版本 --- 准备上传的版本
   uploadedEnJsonContent: string | null; // 从 /update-lang 传入的 en.json 内容
   projectId: string | null; // 从 /update-lang 传入的项目 ID
+  promoteToCurrent: boolean; // 是否在同步成功后自动复制到 current 目录
+  commitId: string | null; // 从 /update-lang 传入的提交 ID
 }
 
 export async function run({
   currentVersion,
   uploadedEnJsonContent,
   projectId,
+  promoteToCurrent,
+  commitId,
 }: SyncI18nOptions) {
   console.log(`[syncI18n] 开始执行多语言同步，版本号: ${currentVersion}`);
 
@@ -45,6 +50,7 @@ export async function run({
 
   const OSS_VERSIONED_LANG_DIR = `${OSS_LANG_DIR}${currentVersion}/`; // 上传版本目录 --- oss还并不存在
   const OSS_LATEST_LANG_DIR = `${OSS_LANG_DIR}${latestVersion}/`; // 当前 OSS 上已有的最新版本
+  const OSS_CURRENT_LANG_DIR = `${OSS_LANG_DIR}current/`; // current 目录
   const CHUNK_SIZE = 100; // 设置每个翻译批次的键数量阈值，例如500个键 --- 防止新增的key过于多导致json内容过于庞大
 
   // --- 1. 获取基准 en.json 文件内容 ---
@@ -69,15 +75,23 @@ export async function run({
   console.log("[syncI18n] 从 OSS 下载 en.stable.json 进行比对。");
 
   let stableEnJsonContent: Record<string, any> = {}; // 前一个版本
+
   try {
-    if (latestVersion) {
-      // 上一个版本存在 --- 取上一个版本的 en.json
+    const stableCurrentVersionEnJson = await ossUtil.getFileContent(
+      `${OSS_CURRENT_LANG_DIR}en.json`
+    ); // current 目录的 en.json 文件内容
+
+    // --- 2.1. 获取 current 目录的 en.json 文件内容 ---
+    if (stableCurrentVersionEnJson) {
+      stableEnJsonContent = JSON.parse(stableCurrentVersionEnJson);
+    } else if (latestVersion) {
+      // --- 2.2. 获取上一个版本的 en.json 文件内容 ---
       const stableLastVersionEnJson = await ossUtil.getFileContent(
         `${OSS_LATEST_LANG_DIR}en.json`
       );
       stableEnJsonContent = JSON.parse(stableLastVersionEnJson);
     } else {
-      // 上一个版本不存在 --- 取根目录的
+      // --- 2.3. 获取根目录的 en.json 文件内容 ---
       const stableDirVersionEnJson = await ossUtil.getFileContent(
         `${OSS_LANG_DIR}en.json`
       );
@@ -273,5 +287,15 @@ export async function run({
     console.log("en.json 已更新。");
   } catch (error) {
     console.error("上传 en.json 失败", error);
+  }
+
+  // --- 8. 自动复制到 current 目录 ---
+  if (promoteToCurrent) {
+    await ossUtil.copyVersionToCurrent(currentVersion);
+  }
+
+  // --- 9. 建立 Commit ID 与 Lang Version 的映射 ---
+  if (commitId) {
+    await createCommitIdVersionMapping(commitId, currentVersion);
   }
 }

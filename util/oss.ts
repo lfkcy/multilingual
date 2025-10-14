@@ -266,6 +266,64 @@ export class OssUtil {
       throw error;
     }
   }
+/**
+ * 将指定版本目录下的所有文件复制到 current 目录下
+ * @param version 要复制到 current 目录下的版本号 (例如 "20251013120000")
+ */
+async copyVersionToCurrent(version: string): Promise<void> {
+  const sourcePrefix = `${OSS_LANG_DIR}${version}/`;
+  const targetPrefix = `${OSS_LANG_DIR}current/`;
+
+  console.log(`[OSS] 开始复制版本：${version}`);
+  console.log(`[OSS] 源目录：${sourcePrefix}`);
+  console.log(`[OSS] 目标目录：${targetPrefix}`);
+
+  try {
+    // 1. 列出源目录下所有 JSON 文件
+    const { files } = await this.listJsonFilesInDirectory(sourcePrefix);
+
+    if (files.length === 0) {
+      console.warn(`[OSS] 版本 ${version} 下未找到任何 JSON 文件，跳过复制。`);
+      return;
+    }
+
+    // 2. 遍历每个文件并复制到 current 目录
+    for (const file of files) {
+      const sourceObject = `${sourcePrefix}${file.name}`;
+      const targetObject = `${targetPrefix}${file.name}`;
+
+      try {
+        await this.client.copy(targetObject, sourceObject);
+        console.log(`[OSS] ✅ 已复制: ${file.name}`);
+      } catch (err) {
+        console.error(`[OSS] ❌ 复制文件失败: ${file.name}`, err);
+        throw err;
+      }
+    }
+
+    console.log(`[OSS] 版本 ${version} 已成功复制到 current 目录，共复制 ${files.length} 个文件。`);
+  } catch (error) {
+    console.error(`[OSS] 推广版本 ${version} 失败，错误详情:`, error);
+    throw error;
+  }
+}
+
+
+/**
+ * 查找最新的版本号
+ */
+async  findLatestVersion(): Promise<string | null> {
+  try {
+    let versions = await this.listLanguageVersions(OSS_LANG_DIR);
+    if (!versions || versions.length === 0) return null;
+    versions.sort();
+    return versions[versions.length - 1];
+  } catch (e) {
+    console.error("查找最新版本失败:", e);
+    return null;
+  }
+}
+
 
   /**
    * 辅助函数：判断给定路径是否为本地文件路径

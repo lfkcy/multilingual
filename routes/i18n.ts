@@ -4,6 +4,7 @@ import { ChildProcess, fork } from "child_process";
 import { acquireLock, releaseLock } from "../util";
 import { getOssUtil, OSS_LANG_DIR } from "../util/oss";
 import { apiKeyAuth } from "../util/middleware";
+import { getLangVersionByCommitId } from "../util/versioning";
 
 const router = express.Router();
 
@@ -78,11 +79,16 @@ async function terminateCurrentSyncProcess(): Promise<void> {
 /**
  * 执行多语言同步
  * @param {string | null} uploadedEnJsonContent - 上传的 en.json 内容
+ * @param {string | null} projectId - 项目 ID
+ * @param {boolean} promoteToCurrent - 是否在同步成功后自动复制到 current 目录
+ * @param {string | null} commitId - 提交 ID
  * @returns {Promise<{code: number, message: string, error?: string}>}
  */
 async function executeI18nSync(
   uploadedEnJsonContent: string | null = null,
-  projectId: string | null = null
+  projectId: string | null = null,
+  promoteToCurrent: boolean = false, // 默认为 false
+  commitId: string | null = null // 默认为 null
 ): Promise<{
   code: number;
   message: string;
@@ -116,7 +122,12 @@ async function executeI18nSync(
           Buffer.from(uploadedEnJsonContent).toString("base64")
         );
       }
-
+      if (promoteToCurrent) {
+        forkArgs.push("--promote-to-current", "true");
+      }
+      if (commitId) {
+        forkArgs.push("--commit-id", commitId);
+      }
       // 启动子进程，并将 uploadedEnJsonContent，projectId 作为参数传递
       // 子进程会处理接收到的内容，或自行从 OSS/本地获取
       const newSyncProcess = fork(SYNC_SCRIPT_PATH, forkArgs);
@@ -262,19 +273,42 @@ router.get("/get-versions", apiKeyAuth, async (req: any, res: any) => {
   }
 });
 
+// 获取是否正在同步状态
+router.get("/get-is-asyncing", apiKeyAuth, async (req: any, res: any) => {
+  try {
+    const isAsyncing = currentSyncProcess !== null;
+    console.log(`[get-is-asyncing] 是否正在同步: ${isAsyncing}`);
+    res.json({ code: 0, data: { isAsyncing } });
+  } catch (e: any) {
+    res.status(500).json({
+      code: 500,
+      data: null,
+      error: e?.message || "获取是否正在同步状态失败",
+    });
+  }
+});
+
 // 上传/更新指定语言的 JSON
 router.post("/update-lang", apiKeyAuth, async (req: any, res: any) => {
   let version = ""; // 版本号
   const projectId = (req as any).projectId;
+
+  // 获取 promoteToCurrent 参数，用于控制是否自动复制到 current 目录
+  let promoteToCurrent = false;
+  if (req.body && req.body.promoteToCurrent) {
+    promoteToCurrent = req.body.promoteToCurrent === "true";
+  }
+
+  let commitId: string | null = null;
+  if (req.body && req.body.commitId) {
+    commitId = req.body.commitId;
+  }
   const ossUtil = getOssUtil(projectId);
 
   try {
     if (!req.files.version) {
       // 如果版本号为空，则获取最新版本
-      const versions = await ossUtil.listLanguageVersions(OSS_LANG_DIR);
-      if (versions.length > 0) {
-        version = versions[versions.length - 1];
-      }
+      version = (await ossUtil.findLatestVersion()) ?? "";
     } else {
       version = req.files.version;
     }
@@ -330,7 +364,12 @@ router.post("/update-lang", apiKeyAuth, async (req: any, res: any) => {
     if (lang === "en") {
       const jsonContent = uploadedFile.data.toString(); // 保持为字符串，传递给子进程
 
-      const syncResult = await executeI18nSync(jsonContent, projectId);
+      const syncResult = await executeI18nSync(
+        jsonContent,
+        projectId,
+        promoteToCurrent,
+        commitId
+      );
       if (syncResult.code === 0) {
         return res.json({
           code: 0,
@@ -369,6 +408,79 @@ router.post("/update-lang", apiKeyAuth, async (req: any, res: any) => {
       data: null,
       error: e?.message || "文件处理失败",
     });
+  }
+});
+
+/**
+ * promote-version
+ * 用于前端部署完成后，将指定 Commit ID 对应的版本推广到 current 目录。
+ */
+router.post("/promote-version", apiKeyAuth, async (req: any, res: any) => {
+  let commitId = "";
+  if (req.body && req.body.commitId) {
+    commitId = req.body.commitId;
+  }
+  const projectId = (req as any).projectId;
+
+  let langVersionToPromote: string | null = null;
+
+  try {
+    const ossUtil = getOssUtil(projectId);
+
+    // 1. 根据 Commit ID 查找版本号
+    if (commitId) {
+      langVersionToPromote = await getLangVersionByCommitId(commitId);
+
+      if (!langVersionToPromote) {
+        return res.status(404).json({
+          code: 404,
+          data: null,
+          error: `Commit ID ${commitId} 未找到对应的语言版本号。`,
+        });
+      }
+    } else {
+      // 2. 如果 Commit ID 未传入，则自动选择 OSS 中最新版本
+      langVersionToPromote = await ossUtil.findLatestVersion();
+
+      if (!langVersionToPromote) {
+        return res.status(404).json({
+          code: 404,
+          data: null,
+          error: "OSS 中没有找到任何语言版本，无法推广。",
+        });
+      }
+      console.log(
+        `未指定 Commit ID, 则自动选择 OSS 中最新版本: ${langVersionToPromote}`
+      );
+    }
+
+    // 3. 检查语言版本目录是否存在
+    const versions = await ossUtil.listLanguageVersions(OSS_LANG_DIR);
+    if (!versions.includes(langVersionToPromote)) {
+      return res.status(404).json({
+        code: 404,
+        data: null,
+        error: `语言版本号 ${langVersionToPromote} 不存在或尚未同步完成`,
+      });
+    }
+
+    // 4. 执行复制操作
+    await ossUtil.copyVersionToCurrent(langVersionToPromote);
+
+    // 5. 返回成功
+    res.json({
+      code: 0,
+      data: {
+        commitId: commitId,
+        version: langVersionToPromote,
+        target: "current",
+      },
+      message: `版本 ${langVersionToPromote} 已成功推广到 current 目录。`,
+    });
+  } catch (e: any) {
+    res
+      .status(500)
+      .json({ code: 500, data: null, error: e?.message || "推广版本失败" });
   }
 });
 
