@@ -3,6 +3,7 @@ import path from "path";
 
 const LOCK_FILE = path.resolve(__dirname, "./sync_lock");
 const LOCK_TIMEOUT_MS = 1000 * 60 * 1; // 1分钟
+const LOCK_HEARTBEAT_INTERVAL_MS = 15 * 1000; // 心跳 15s
 
 /**
  * 拍平json
@@ -179,6 +180,48 @@ function releaseLock(): void {
   }
 }
 
+/**
+ * 判断当前锁是否处于有效期内（用于跨请求/多实例状态探测）。
+ */
+function isLockActive(): boolean {
+  try {
+    if (!fs.existsSync(LOCK_FILE)) return false;
+    const content = fs.readFileSync(LOCK_FILE, "utf-8");
+    const ts = parseInt(content, 10);
+    if (isNaN(ts)) return false;
+    return Date.now() - ts <= LOCK_TIMEOUT_MS;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 刷新锁文件时间戳（用于心跳续租）。
+ */
+function refreshLockTimestamp(): void {
+  try {
+    if (!fs.existsSync(LOCK_FILE)) return;
+    const timestamp = Date.now().toString();
+    fs.writeFileSync(LOCK_FILE, timestamp, { encoding: "utf-8" });
+  } catch (err) {
+    console.error("刷新锁文件时间戳失败:", (err as any)?.message || err);
+  }
+}
+
+/**
+ * 启动锁心跳，返回一个停止函数，调用后停止心跳。
+ */
+function startLockHeartbeat(): () => void {
+  const timer = setInterval(() => {
+    refreshLockTimestamp();
+  }, LOCK_HEARTBEAT_INTERVAL_MS);
+  // 避免阻止进程退出
+  if ((timer as any).unref) {
+    (timer as any).unref();
+  }
+  return () => clearInterval(timer);
+}
+
 export {
   flatten,
   unflattenJSON,
@@ -186,4 +229,7 @@ export {
   acquireLock,
   releaseLock,
   chunkArray,
+  isLockActive,
+  startLockHeartbeat,
+  refreshLockTimestamp,
 };

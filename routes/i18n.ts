@@ -1,15 +1,16 @@
 import express from "express";
-import { acquireLock, releaseLock } from "../util";
+import {
+  acquireLock,
+  releaseLock,
+  isLockActive,
+  startLockHeartbeat,
+} from "../util";
 import { getOssUtil, OSS_LANG_DIR } from "../util/oss";
 import { apiKeyAuth } from "../util/middleware";
 import { getLangVersionByCommitId } from "../util/versioning";
 import { runI18nSync } from "../util/runI18nSync";
 
 const router = express.Router();
-
-// 使用布尔/Promise 管理同步状态
-let isSyncing: boolean = false;
-let syncingPromise: Promise<void> | null = null;
 
 /**
  * 执行多语言同步
@@ -30,15 +31,7 @@ async function executeI18nSync(
   error?: string;
 }> {
   try {
-    // 1. 如果已有任务在跑，直接返回占用中
-    if (isSyncing || syncingPromise) {
-      return {
-        code: 429,
-        message: "多语言同步任务正在进行中，请稍后再试（正在同步）。",
-      };
-    }
-
-    // 2. 尝试获取文件锁
+    // 1. 尝试获取文件锁
     const lockAcquired = await acquireLock();
     if (!lockAcquired) {
       return {
@@ -47,10 +40,10 @@ async function executeI18nSync(
       };
     }
 
-    // 3. 直接在当前进程异步执行同步逻辑
+    // 2. 直接在当前进程异步执行同步逻辑，并开启锁心跳
     console.log(`[${projectId}] 启动新的多语言同步任务...`);
-    isSyncing = true;
-    syncingPromise = (async () => {
+    const stopHeartbeat = startLockHeartbeat();
+    (async () => {
       try {
         await runI18nSync({
           projectId,
@@ -62,8 +55,7 @@ async function executeI18nSync(
       } catch (e: any) {
         console.error(`[${projectId}] 多语言同步任务失败:`, e?.message || e);
       } finally {
-        isSyncing = false;
-        syncingPromise = null;
+        stopHeartbeat();
         releaseLock();
       }
     })();
@@ -75,8 +67,6 @@ async function executeI18nSync(
   } catch (e: any) {
     // 如果发生错误，确保锁被释放
     releaseLock();
-    isSyncing = false;
-    syncingPromise = null;
     return {
       code: 500,
       message: e?.message || "多语言同步任务提交失败",
@@ -154,7 +144,7 @@ router.get("/get-versions", apiKeyAuth, async (req: any, res: any) => {
     res.json({
       code: 0,
       data: versions,
-      isAsyncing: isSyncing || Boolean(syncingPromise),
+      isAsyncing: isLockActive(),
     });
   } catch (error: any) {
     res.status(500).json({
@@ -168,7 +158,7 @@ router.get("/get-versions", apiKeyAuth, async (req: any, res: any) => {
 // 获取是否正在同步状态
 router.get("/get-is-asyncing", apiKeyAuth, async (req: any, res: any) => {
   try {
-    const isAsyncing = isSyncing || Boolean(syncingPromise);
+    const isAsyncing = isLockActive();
     console.log(`[get-is-asyncing] 是否正在同步: ${isAsyncing}`);
     res.json({ code: 0, data: { isAsyncing } });
   } catch (e: any) {
