@@ -3950,5 +3950,329 @@
   [
     "zh::_STRING_:David",
     "大卫"
+  ],
+  [
+    "da::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "da::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "da::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "da::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "de::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "de::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "de::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "de::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "es::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "es::_STRING_:no credit card needed",
+    "No se necesita tarjeta de crédito"
+  ],
+  [
+    "es::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "es::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "es::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "fr::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "fr::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "fr::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "fr::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "id::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "id::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "id::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "id::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "it::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "it::_STRING_:no credit card needed",
+    "Non è richiesta la carta di credito"
+  ],
+  [
+    "it::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "it::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "it::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "ja::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "ja::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "ja::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "ja::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "ko::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "ko::_STRING_:no credit card needed",
+    "신용 카드가 필요하지 않습니다"
+  ],
+  [
+    "ko::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "ko::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "ko::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "nb::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "nb::_STRING_:no credit card needed",
+    "Ingen kredittkort kreves"
+  ],
+  [
+    "nb::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "nb::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "nb::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "nl::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "nl::_STRING_:no credit card needed",
+    "geen creditcard nodig"
+  ],
+  [
+    "nl::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "nl::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "nl::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "pl::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "pl::_STRING_:no credit card needed",
+    "Karta kredytowa nie jest wymagana"
+  ],
+  [
+    "pl::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "pl::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "pl::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "pt::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "pt::_STRING_:no credit card needed",
+    "Não é necessário cartão de crédito"
+  ],
+  [
+    "pt::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "pt::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "pt::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "ru::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "ru::_STRING_:no credit card needed",
+    "Кредитная карта не требуется"
+  ],
+  [
+    "ru::_STRING_:Create Video Now",
+    "Создать видео сейчас"
+  ],
+  [
+    "ru::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "ru::_STRING_:Coming Soon",
+    "Скоро в продаже"
+  ],
+  [
+    "ru::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "ru::_STRING_:Try it",
+    "Попробуйте это"
+  ],
+  [
+    "ru::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "ru::_STRING_: Remove Watermark Now",
+    "Удалить водяной знак сейчас"
+  ],
+  [
+    "th::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "th::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "th::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "th::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "tr::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "tr::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "tr::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "tr::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "tw::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "tw::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "tw::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "tw::_STRING_:Google Veo 2",
+    "Google Veo 2"
+  ],
+  [
+    "zh::_STRING_:Veo 3.1",
+    "Veo 3.1"
+  ],
+  [
+    "zh::_STRING_:no credit card needed",
+    "无需信用卡"
+  ],
+  [
+    "zh::_STRING_:Google Veo 3.1",
+    "Google Veo 3.1"
+  ],
+  [
+    "zh::_STRING_:Google Veo 3",
+    "Google Veo 3"
+  ],
+  [
+    "zh::_STRING_:Google Veo 2",
+    "Google Veo 2"
   ]
 ]

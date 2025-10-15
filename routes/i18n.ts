@@ -1,80 +1,15 @@
 import express from "express";
-import path from "path";
-import { ChildProcess, fork } from "child_process";
 import { acquireLock, releaseLock } from "../util";
 import { getOssUtil, OSS_LANG_DIR } from "../util/oss";
 import { apiKeyAuth } from "../util/middleware";
 import { getLangVersionByCommitId } from "../util/versioning";
+import { runI18nSync } from "../util/runI18nSync";
 
 const router = express.Router();
 
-// 全局变量：存储当前正在运行的 syncI18n 子进程实例
-let currentSyncProcess: ChildProcess | null = null;
-let currentSyncProcessPromise: Promise<void> | null = null; // 用于等待旧进程终止
-
-// 假设 runI18nSync.ts 是你的子进程脚本
-const SYNC_SCRIPT_PATH = path.resolve(__dirname, "../util/runI18nSync.ts");
-
-/**
- * 终止当前正在运行的 syncI18n 子进程
- * @returns {Promise<void>} 返回一个 Promise，在旧进程终止后 resolve
- */
-async function terminateCurrentSyncProcess(): Promise<void> {
-  // 捕获当前的进程实例到局部变量，避免被后续请求更改
-  const processToTerminate = currentSyncProcess;
-  const processPromiseToAwait = currentSyncProcessPromise; // 也捕获当前的 Promise
-
-  if (processToTerminate && !processToTerminate.killed) {
-    console.log(
-      `检测到有正在运行的同步任务 (PID: ${processToTerminate.pid})，正在尝试终止...`
-    );
-
-    // 只有当没有等待中的 Promise 时才创建一个新的
-    if (!processPromiseToAwait) {
-      currentSyncProcessPromise = new Promise((resolve) => {
-        const onExit = (code: number | null, signal: NodeJS.Signals | null) => {
-          console.log(
-            `旧同步任务 (PID: ${processToTerminate?.pid}) 已终止。代码: ${code}, 信号: ${signal}`
-          );
-          // 确保只有在当前退出的是我们期望的进程时才清除全局引用
-          if (currentSyncProcess === processToTerminate) {
-            currentSyncProcess = null; // 清除引用
-          }
-          currentSyncProcessPromise = null; // 清除 Promise
-          resolve();
-        };
-
-        processToTerminate.once("exit", onExit);
-        processToTerminate.once("error", (err) => {
-          console.error(
-            `旧同步任务 (PID: ${processToTerminate?.pid}) 发生错误并终止: ${err.message}`
-          );
-          onExit(1, null); // 模拟退出
-        });
-
-        // 发送 SIGTERM 信号
-        processToTerminate.kill("SIGTERM");
-
-        // 为当前要终止的进程设置超时杀死
-        setTimeout(() => {
-          if (processToTerminate && !processToTerminate.killed) {
-            console.warn(
-              `旧同步任务 (PID: ${processToTerminate.pid}) 未响应 SIGTERM，发送 SIGKILL...`
-            );
-            processToTerminate.kill("SIGKILL");
-          }
-        }, 5000); // 5秒后如果还没退出，则强制杀死
-      });
-    }
-
-    // 等待我们捕获的这个进程的 Promise 结束
-    await (processPromiseToAwait || currentSyncProcessPromise);
-  } else {
-    console.log("没有正在运行的同步任务需要终止。");
-    currentSyncProcess = null; // 确保引用是空的
-    currentSyncProcessPromise = null;
-  }
-}
+// 使用布尔/Promise 管理同步状态
+let isSyncing: boolean = false;
+let syncingPromise: Promise<void> | null = null;
 
 /**
  * 执行多语言同步
@@ -95,7 +30,15 @@ async function executeI18nSync(
   error?: string;
 }> {
   try {
-    // 1. 尝试获取文件锁
+    // 1. 如果已有任务在跑，直接返回占用中
+    if (isSyncing || syncingPromise) {
+      return {
+        code: 429,
+        message: "多语言同步任务正在进行中，请稍后再试（正在同步）。",
+      };
+    }
+
+    // 2. 尝试获取文件锁
     const lockAcquired = await acquireLock();
     if (!lockAcquired) {
       return {
@@ -104,87 +47,36 @@ async function executeI18nSync(
       };
     }
 
-    // 2. 如果获取到锁，终止所有旧任务
-    await terminateCurrentSyncProcess();
-
-    try {
-      // 3. 启动新的同步任务
-      console.log(`[${projectId}] 启动新的多语言同步任务...`);
-
-      // 组装传递给子进程的参数数组
-      const forkArgs: string[] = [];
-      if (projectId) {
-        forkArgs.push("--project-id", projectId);
+    // 3. 直接在当前进程异步执行同步逻辑
+    console.log(`[${projectId}] 启动新的多语言同步任务...`);
+    isSyncing = true;
+    syncingPromise = (async () => {
+      try {
+        await runI18nSync({
+          projectId,
+          uploadedEnJsonContent,
+          promoteToCurrent,
+          commitId,
+        });
+        console.log(`[${projectId}] 多语言同步任务完成。`);
+      } catch (e: any) {
+        console.error(`[${projectId}] 多语言同步任务失败:`, e?.message || e);
+      } finally {
+        isSyncing = false;
+        syncingPromise = null;
+        releaseLock();
       }
-      if (uploadedEnJsonContent) {
-        forkArgs.push(
-          "--en-json-content",
-          Buffer.from(uploadedEnJsonContent).toString("base64")
-        );
-      }
-      if (promoteToCurrent) {
-        forkArgs.push("--promote-to-current", "true");
-      }
-      if (commitId) {
-        forkArgs.push("--commit-id", commitId);
-      }
-      // 启动子进程，并将 uploadedEnJsonContent，projectId 作为参数传递
-      // 子进程会处理接收到的内容，或自行从 OSS/本地获取
-      const newSyncProcess = fork(SYNC_SCRIPT_PATH, forkArgs);
+    })();
 
-      currentSyncProcess = newSyncProcess; // 保存新进程的引用
-      currentSyncProcessPromise = null; // 清除旧 Promise，因为我们现在有一个新的进程
-
-      newSyncProcess.on("exit", (code, signal) => {
-        // 只有当退出的进程是当前活动的进程时，才清除全局引用并释放锁
-        if (currentSyncProcess === newSyncProcess) {
-          currentSyncProcess = null;
-          releaseLock();
-          console.log(
-            `新的多语言同步子进程 (PID: ${newSyncProcess.pid}) 退出。代码: ${code}, 信号: ${signal}`
-          );
-        } else {
-          console.log(
-            `Non-current active process (PID: ${newSyncProcess.pid}) exited.`
-          );
-        }
-      });
-
-      newSyncProcess.on("error", (err) => {
-        // 只有当错误的进程是当前活动的进程时，才清除全局引用并释放锁
-        if (currentSyncProcess === newSyncProcess) {
-          currentSyncProcess = null;
-          releaseLock();
-          console.error(
-            `新的多语言同步子进程 (PID: ${newSyncProcess.pid}) encountered an error: ${err.message}`
-          );
-        } else {
-          console.error(
-            `Non-current active process (PID: ${newSyncProcess.pid}) encountered an error: ${err.message}`
-          );
-        }
-      });
-
-      return {
-        code: 0,
-        message: "旧任务已终止，新的多语言同步任务已提交至后台。",
-      };
-    } catch (e: any) {
-      // 如果在新进程启动或绑定事件时发生错误，确保锁被释放
-      releaseLock();
-      currentSyncProcess = null; // 确保引用被清除
-      currentSyncProcessPromise = null; // 确保 Promise 被清除
-      return {
-        code: 500,
-        message: e?.message || "Failed to start sync process.",
-        error: e?.message,
-      };
-    }
+    return {
+      code: 0,
+      message: "新的多语言同步任务已提交至后台",
+    };
   } catch (e: any) {
     // 如果发生错误，确保锁被释放
     releaseLock();
-    currentSyncProcess = null;
-    currentSyncProcessPromise = null;
+    isSyncing = false;
+    syncingPromise = null;
     return {
       code: 500,
       message: e?.message || "多语言同步任务提交失败",
@@ -262,7 +154,7 @@ router.get("/get-versions", apiKeyAuth, async (req: any, res: any) => {
     res.json({
       code: 0,
       data: versions,
-      isAsyncing: currentSyncProcess !== null, // 是否正在同步
+      isAsyncing: isSyncing || Boolean(syncingPromise),
     });
   } catch (error: any) {
     res.status(500).json({
@@ -276,7 +168,7 @@ router.get("/get-versions", apiKeyAuth, async (req: any, res: any) => {
 // 获取是否正在同步状态
 router.get("/get-is-asyncing", apiKeyAuth, async (req: any, res: any) => {
   try {
-    const isAsyncing = currentSyncProcess !== null;
+    const isAsyncing = isSyncing || Boolean(syncingPromise);
     console.log(`[get-is-asyncing] 是否正在同步: ${isAsyncing}`);
     res.json({ code: 0, data: { isAsyncing } });
   } catch (e: any) {
