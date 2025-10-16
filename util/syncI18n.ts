@@ -122,7 +122,7 @@ export async function run({
 
   // 获取所有 lang 文件（排除 en/en_stable）
   try {
-    const res = await ossUtil.listJsonFilesInDirectory(OSS_LATEST_LANG_DIR);
+    const res = await ossUtil.listJsonFilesInDirectory(OSS_CURRENT_LANG_DIR);
     if (res) {
       langFiles = res.files
         .map((f) => f.name)
@@ -148,7 +148,7 @@ export async function run({
     let targetLangJsonContent: Record<string, any>; // 目标语言 JSON 内容
     try {
       const jsonStr = await ossUtil.getFileContent(
-        `${OSS_LATEST_LANG_DIR}${lang}.json`
+        `${OSS_CURRENT_LANG_DIR}${lang}.json`
       );
       targetLangJsonContent = jsonStr.trim() ? JSON.parse(jsonStr) : {};
     } catch (err) {
