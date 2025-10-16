@@ -301,7 +301,8 @@ Translated (${targetLang}):`;
         return translatedText;
       } catch (error: any) {
         console.error(
-          `   ❌ 单行翻译失败 (尝试 ${attempt + 1}/${maxAttempts}, 错误: ${error.message || error
+          `   ❌ 单行翻译失败 (尝试 ${attempt + 1}/${maxAttempts}, 错误: ${
+            error.message || error
           })`
         );
         if (
@@ -323,6 +324,125 @@ Translated (${targetLang}):`;
       `   ⚠️ 单行翻译最终失败，返回原始文本: ${text.substring(0, 50)}...`
     );
     return text; // 失败后返回原始文本
+  }
+
+  /**
+   * 验证并修复 JSON 结构，确保翻译后的结构与原始结构保持一致
+   * @param original 原始的 JSON 对象或数组
+   * @param translated AI 返回的翻译结果
+   * @returns 修复后的 JSON 对象或数组
+   */
+  private validateAndFixJsonStructure(original: any, translated: any): any {
+    // 类型不匹配，返回原始结构
+    if (typeof original !== typeof translated) {
+      console.warn(
+        `⚠️ 类型不匹配: 原始类型 ${typeof original}, 翻译类型 ${typeof translated}, 返回原始结构`
+      );
+      return original;
+    }
+
+    // 处理 null 值
+    if (original === null || translated === null) {
+      return original;
+    }
+
+    // 处理数组结构
+    if (Array.isArray(original)) {
+      return this.handleArrayStructure(original, translated);
+    }
+
+    // 处理对象结构
+    if (typeof original === "object" && typeof translated === "object") {
+      return this.handleObjectStructure(original, translated);
+    }
+
+    // 基本类型直接返回翻译结果
+    return translated;
+  }
+
+  /**
+   * 处理数组结构差异
+   * @param originalArray 原始数组
+   * @param translatedArray AI 返回的数组
+   * @returns 修复后的数组
+   */
+  private handleArrayStructure(
+    originalArray: any[],
+    translatedArray: any[]
+  ): any[] {
+    if (!Array.isArray(translatedArray)) {
+      console.warn(`⚠️ AI 返回的不是数组，返回原始数组结构`);
+      return originalArray;
+    }
+
+    const result: any[] = [];
+    const maxLength = Math.max(originalArray.length, translatedArray.length);
+
+    for (let i = 0; i < maxLength; i++) {
+      if (i < originalArray.length && i < translatedArray.length) {
+        // 两个数组都有这个索引，递归验证结构
+        result[i] = this.validateAndFixJsonStructure(
+          originalArray[i],
+          translatedArray[i]
+        );
+      } else if (i < originalArray.length) {
+        // 只有原始数组有这个索引，使用原始值
+        console.log(`🔧 数组索引 ${i} 缺失，使用原始值`);
+        result[i] = originalArray[i];
+      } else {
+        // 只有翻译数组有这个索引，忽略额外元素
+        console.log(`🔧 数组索引 ${i} 为额外元素，已忽略`);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * 处理对象结构差异
+   * @param originalObj 原始对象
+   * @param translatedObj AI 返回的对象
+   * @returns 修复后的对象
+   */
+  private handleObjectStructure(originalObj: any, translatedObj: any): any {
+    if (typeof translatedObj !== "object" || Array.isArray(translatedObj)) {
+      console.warn(`⚠️ AI 返回的不是对象，返回原始对象结构`);
+      return originalObj;
+    }
+
+    const result: any = {};
+
+    // 遍历原始对象的所有键，确保结构完整性
+    for (const key in originalObj) {
+      if (Object.prototype.hasOwnProperty.call(originalObj, key)) {
+        const originalValue = originalObj[key];
+        const translatedValue = translatedObj[key];
+
+        if (key in translatedObj) {
+          // 键存在于翻译结果中，递归验证结构
+          result[key] = this.validateAndFixJsonStructure(
+            originalValue,
+            translatedValue
+          );
+        } else {
+          // 键缺失，使用原始值
+          console.log(`🔧 键 "${key}" 缺失，使用原始值`);
+          result[key] = originalValue;
+        }
+      }
+    }
+
+    // 检查并记录 AI 添加的额外键
+    for (const key in translatedObj) {
+      if (
+        Object.prototype.hasOwnProperty.call(translatedObj, key) &&
+        !(key in originalObj)
+      ) {
+        console.log(`🔧 发现额外键 "${key}"，已忽略`);
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -519,7 +639,8 @@ Translated (${targetLang}):`;
       try {
         if (globalAttempt > 0) {
           console.log(
-            `第 ${globalAttempt + 1
+            `第 ${
+              globalAttempt + 1
             }/${maxApiRetries} 次全局尝试翻译 JSON 片段：${jsonChunk.substring(
               0,
               50
@@ -577,8 +698,16 @@ Translated (${targetLang}):`;
 
         try {
           // 尝试解析 Gemini 返回的 JSON
-          currentTranslatedObj = JSON.parse(responseText);
+          const aiTranslatedObj = JSON.parse(responseText);
           console.log("✅ 首次 JSON 解析成功。");
+
+          // 验证并修复 JSON 结构，确保与原始结构保持一致
+          console.log("🔍 验证并修复 JSON 结构...");
+          currentTranslatedObj = this.validateAndFixJsonStructure(
+            originalParsedJson,
+            aiTranslatedObj
+          );
+          console.log("✅ JSON 结构验证及修复完成。");
         } catch (jsonParseError) {
           console.warn(
             `⚠️ 首次无法解析 Gemini 返回的 JSON。原始响应: "${responseText.substring(
@@ -614,7 +743,8 @@ Translated (${targetLang}):`;
         return finalTranslatedJson; // 翻译成功！
       } catch (error: any) {
         console.error(
-          `❌ 翻译失败 (密钥索引: ${this.currentKeyIndex}, 错误: ${error.message || error
+          `❌ 翻译失败 (密钥索引: ${this.currentKeyIndex}, 错误: ${
+            error.message || error
           })`
         );
 

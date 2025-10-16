@@ -4274,5 +4274,37 @@
   [
     "zh::_STRING_:Google Veo 2",
     "Google Veo 2"
+  ],
+  [
+    "da::_STRING_:no credit card needed",
+    "Intet kreditkort er nødvendigt"
+  ],
+  [
+    "id::_STRING_:no credit card needed",
+    "Tidak perlu kartu kredit"
+  ],
+  [
+    "th::_STRING_:no credit card needed",
+    "ไม่จำเป็นต้องใช้บัตรเครดิต"
+  ],
+  [
+    "th::_STRING_:Create Video Now",
+    "สร้างวิดีโอทันที"
+  ],
+  [
+    "th::_STRING_:Coming Soon",
+    "เร็วๆ นี้"
+  ],
+  [
+    "th::_STRING_:Try it",
+    "ลองเลย"
+  ],
+  [
+    "th::_STRING_: Remove Watermark Now",
+    "Remove Watermark Now"
+  ],
+  [
+    "tw::_STRING_:no credit card needed",
+    "無需信用卡"
   ]
 ]
