@@ -7,7 +7,10 @@ import {
 } from "../util";
 import { getOssUtil, OSS_LANG_DIR } from "../util/oss";
 import { apiKeyAuth } from "../util/middleware";
-import { getLangVersionByCommitId } from "../util/versioning";
+import {
+  getLangVersionByCommitId,
+  recordPromoteRequest,
+} from "../util/versioning";
 import { runI18nSync } from "../util/runI18nSync";
 
 const router = express.Router();
@@ -31,7 +34,7 @@ async function executeI18nSync(
   error?: string;
 }> {
   try {
-    // 1. 尝试获取文件锁
+    // 1. 尝试获取文件锁（唯一真源）
     const lockAcquired = await acquireLock();
     if (!lockAcquired) {
       return {
@@ -296,8 +299,11 @@ router.post("/update-lang", apiKeyAuth, async (req: any, res: any) => {
 /**
  * promote-version
  * 用于前端部署完成后，将指定 Commit ID 对应的版本推广到 current 目录。
+ * 如果翻译未完成，会记录推广请求，等待翻译完成后自动执行。
  */
 router.post("/promote-version", apiKeyAuth, async (req: any, res: any) => {
+  console.log("promote-version 请求开始");
+
   let commitId = "";
   if (req.body && req.body.commitId) {
     commitId = req.body.commitId;
@@ -314,15 +320,27 @@ router.post("/promote-version", apiKeyAuth, async (req: any, res: any) => {
       langVersionToPromote = await getLangVersionByCommitId(commitId);
 
       if (!langVersionToPromote) {
-        return res.status(404).json({
-          code: 404,
-          data: null,
-          error: `Commit ID ${commitId} 未找到对应的语言版本号。`,
+        // 如果找不到版本号，记录推广请求，等待翻译完成
+        console.log(
+          `Commit ID ${commitId} 未找到对应的语言版本号，记录推广请求`
+        );
+        await recordPromoteRequest(commitId, projectId);
+
+        return res.json({
+          code: 0,
+          data: {
+            commitId: commitId,
+            version: null,
+            target: "current",
+            status: "pending",
+          },
+          message: `Commit ID ${commitId} 对应的翻译尚未完成，已记录推广请求，翻译完成后将自动推广到 current 目录。`,
         });
       }
     } else {
       // 2. 如果 Commit ID 未传入，则自动选择 OSS 中最新版本
       langVersionToPromote = await ossUtil.findLatestVersion();
+      console.log("langVersionToPromote", langVersionToPromote);
 
       if (!langVersionToPromote) {
         return res.status(404).json({
@@ -339,11 +357,28 @@ router.post("/promote-version", apiKeyAuth, async (req: any, res: any) => {
     // 3. 检查语言版本目录是否存在
     const versions = await ossUtil.listLanguageVersions(OSS_LANG_DIR);
     if (!versions.includes(langVersionToPromote)) {
-      return res.status(404).json({
-        code: 404,
-        data: null,
-        error: `语言版本号 ${langVersionToPromote} 不存在或尚未同步完成`,
-      });
+      // 如果版本目录不存在，记录推广请求
+      if (commitId) {
+        console.log(`语言版本号 ${langVersionToPromote} 不存在，记录推广请求`);
+        await recordPromoteRequest(commitId, projectId);
+
+        return res.json({
+          code: 0,
+          data: {
+            commitId: commitId,
+            version: langVersionToPromote,
+            target: "current",
+            status: "pending",
+          },
+          message: `版本 ${langVersionToPromote} 尚未同步完成，已记录推广请求，翻译完成后将自动推广到 current 目录。`,
+        });
+      } else {
+        return res.status(404).json({
+          code: 404,
+          data: null,
+          error: `语言版本号 ${langVersionToPromote} 不存在或尚未同步完成`,
+        });
+      }
     }
 
     // 4. 执行复制操作
@@ -356,6 +391,7 @@ router.post("/promote-version", apiKeyAuth, async (req: any, res: any) => {
         commitId: commitId,
         version: langVersionToPromote,
         target: "current",
+        status: "completed",
       },
       message: `版本 ${langVersionToPromote} 已成功推广到 current 目录。`,
     });

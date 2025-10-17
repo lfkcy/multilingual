@@ -4306,5 +4306,465 @@
   [
     "tw::_STRING_:no credit card needed",
     "無需信用卡"
+  ],
+  [
+    "ko::_STRING_:Pro",
+    "Pro"
+  ],
+  [
+    "ru::_STRING_:Enhanced realism, cinematic presets, perfect lip-sync",
+    "Улучшенный реализм, кинематографические пресеты, идеальная синхронизация губ"
+  ],
+  [
+    "th::_STRING_:Enhanced realism, cinematic presets, perfect lip-sync",
+    "ความสมจริงที่ได้รับการปรับปรุง, ค่าที่ตั้งไว้ล่วงหน้าแบบภาพยนตร์, การซิงค์ริมฝีปากที่สมบูรณ์แบบ"
+  ],
+  [
+    "tw::_STRING_:Pro",
+    "Pro"
+  ],
+  [
+    "zh::_STRING_:Enhanced realism, cinematic presets, perfect lip-sync",
+    "增强的真实感，电影预设，完美的唇同步"
+  ],
+  [
+    "zh::_STRING_:Pro",
+    "Pro"
+  ],
+  [
+    "de::_STRING_:Frames to Video",
+    "Frames zu Video"
+  ],
+  [
+    "de::_STRING_:Consistent Character Representation",
+    "Konsistente Zeichenrepräsentation"
+  ],
+  [
+    "de::_STRING_:Seamless Scene Extension",
+    "Nahtlose Szenenerweiterung"
+  ],
+  [
+    "de::_STRING_:Advanced Prompt Interpretation",
+    "Erweiterte Prompt-Interpretation"
+  ],
+  [
+    "de::_STRING_:Ingredients for Video",
+    "Zutaten für Video"
+  ],
+  [
+    "de::_STRING_:Rich Audio Generation",
+    "Rich Audio Generation"
+  ],
+  [
+    "da::_STRING_:Veo3.1 Video Generator",
+    "Veo3.1 Videogenerator"
+  ],
+  [
+    "da::_STRING_:Veo 3.1 Video Generator",
+    "Veo 3.1 Videogenerator"
+  ],
+  [
+    "da::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "da::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "da::_STRING_:Digital Marketing Manager",
+    "Digital Marketing Manager"
+  ],
+  [
+    "da::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "de::_STRING_:Veo3.1 Video Generator",
+    "Veo3.1 Video-Generator"
+  ],
+  [
+    "de::_STRING_:Veo 3.1 Video Generator",
+    "Veo 3.1 Video-Generator"
+  ],
+  [
+    "de::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "de::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "de::_STRING_:Digital Marketing Manager",
+    "Digital Marketing Manager"
+  ],
+  [
+    "de::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "de::_STRING_:Animation and VFX Instructor",
+    "Animation und VFX-Lehrer"
+  ],
+  [
+    "es::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "es::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "es::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "fr::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "fr::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "fr::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "id::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "id::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "id::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "it::_STRING_:Veo3.1 Video Generator",
+    "Veo3.1 Generatore video"
+  ],
+  [
+    "it::_STRING_:Veo 3.1 Video Generator",
+    "Veo 3.1 Generatore video"
+  ],
+  [
+    "it::_STRING_:2 Million",
+    "2 Milioni"
+  ],
+  [
+    "it::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "it::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "it::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "ja::_STRING_:Alex Schmidt",
+    "アレックス・シュミット"
+  ],
+  [
+    "ja::_STRING_:Maria Garcia",
+    "マリア・ガルシア"
+  ],
+  [
+    "ja::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "ko::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "ko::_STRING_:Maria Garcia",
+    "마리아 가르시아"
+  ],
+  [
+    "ko::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "nb::_STRING_:2 Million",
+    "2 Million"
+  ],
+  [
+    "nb::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "nb::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "nb::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "nl::_STRING_:Veo3.1 Video Generator",
+    "Veo3.1 Video Generator"
+  ],
+  [
+    "nl::_STRING_:Veo 3.1 Video Generator",
+    "Veo 3.1 Video Generator"
+  ],
+  [
+    "nl::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "nl::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "nl::_STRING_:Digital Marketing Manager",
+    "Digital Marketing Manager"
+  ],
+  [
+    "nl::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "pl::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "pl::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "pl::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "pt::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "pt::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "pt::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "ru::_STRING_:Alex Schmidt",
+    "Алекс Шмидт"
+  ],
+  [
+    "ru::_STRING_:Maria Garcia",
+    "Мария Гарсия"
+  ],
+  [
+    "ru::_STRING_:Chen Wei",
+    "Чен Вэй"
+  ],
+  [
+    "th::_STRING_:Veo3.1 Video Generator",
+    "Veo3.1 Video Generator"
+  ],
+  [
+    "th::_STRING_:Veo 3.1 Video Generator",
+    "Veo 3.1 ตัวสร้างวิดีโอ"
+  ],
+  [
+    "th::_STRING_:Generate Video Now",
+    "สร้างวิดีโอทันที"
+  ],
+  [
+    "th::_STRING_:No credit card required",
+    "ไม่จำเป็นต้องใช้บัตรเครดิต"
+  ],
+  [
+    "th::_STRING_:Trusted By",
+    "ได้รับความไว้วางใจจาก"
+  ],
+  [
+    "th::_STRING_:Videos Generated",
+    "วิดีโอที่สร้างขึ้น"
+  ],
+  [
+    "th::_STRING_:Corporate Vision",
+    "วิสัยทัศน์ขององค์กร"
+  ],
+  [
+    "th::_STRING_:Experience stunning visual creations powered by Veo 3.1. From cinematic footage to natural lighting and shadows, every frame is precisely generated by AI, showcasing unparalleled detail and smoothness.",
+    "สัมผัสประสบการณ์การสร้างสรรค์ภาพที่น่าทึ่ง ขับเคลื่อนโดย Veo 3.1 ตั้งแต่ภาพยนตร์ไปจนถึงแสงและเงาที่เป็นธรรมชาติ ทุกเฟรมถูกสร้างขึ้นอย่างแม่นยำโดย AI แสดงรายละเอียดและความราบรื่นที่เหนือชั้น"
+  ],
+  [
+    "th::_STRING_:Veo 3.1 Features and Commercial Application Prospects",
+    "Veo 3.1 คุณสมบัติและโอกาสในการใช้งานเชิงพาณิชย์"
+  ],
+  [
+    "th::_STRING_:Discover More Tools",
+    "ค้นหาเครื่องมือเพิ่มเติม"
+  ],
+  [
+    "th::_STRING_:More features await your discovery. Get started now!",
+    "คุณสมบัติเพิ่มเติมรอให้คุณค้นพบ เริ่มต้นเลย!"
+  ],
+  [
+    "th::_STRING_:How to create videos using the Veo 3.1 Video Generator",
+    "วิธีสร้างวิดีโอโดยใช้ Veo 3.1 Video Generator"
+  ],
+  [
+    "th::_STRING_:Become Part of Our Community of Over ",
+    "เข้าร่วมชุมชนของเราที่มีสมาชิกกว่า"
+  ],
+  [
+    "th::_STRING_:2 Million",
+    "2 ล้าน"
+  ],
+  [
+    "th::_STRING_: Members",
+    "สมาชิก"
+  ],
+  [
+    "th::_STRING_:Advanced AI Video Generation with Veo 3.1",
+    "การสร้างวิดีโอ AI ขั้นสูงด้วย Veo 3.1"
+  ],
+  [
+    "th::_STRING_:Realistic Motion and Seamless Audio Synchronization with Veo 3.1",
+    "การเคลื่อนไหวที่สมจริงและการซิงโครไนซ์เสียงที่ราบรื่นด้วย Veo 3.1"
+  ],
+  [
+    "th::_STRING_:Veo 3.1 delivers fluid, physically accurate motion, perfectly synchronized with audio, for a truly lifelike, immersive video experience. Choosing Veo 3.1 means choosing technology leadership.",
+    "Veo 3.1 มอบการเคลื่อนไหวที่ลื่นไหลและแม่นยำทางกายภาพ ซิงโครไนซ์อย่างสมบูรณ์แบบกับเสียง เพื่อประสบการณ์วิดีโอที่สมจริงและสมจริงอย่างแท้จริง การเลือก Veo 3.1 หมายถึงการเลือกความเป็นผู้นำด้านเทคโนโลยี"
+  ],
+  [
+    "th::_STRING_:Powered by Gen-4 technology, Veo 3.1 produces videos with exceptional dynamic realism, highly consistent subject matter, and style. Its industry-leading cue accuracy and world understanding ensure Veo 3.1 delivers exceptional visual quality every time.",
+    "ขับเคลื่อนโดยเทคโนโลยี Gen-4, Veo 3.1 สร้างวิดีโอที่มีความสมจริงแบบไดนามิกเป็นพิเศษ, เนื้อหาที่สอดคล้องกันอย่างมาก, และสไตล์ ความแม่นยำของคิวชั้นนำของอุตสาหกรรมและความเข้าใจโลกของมันทำให้มั่นใจได้ว่า Veo 3.1 มอบคุณภาพการมองเห็นที่ยอดเยี่ยมทุกครั้ง"
+  ],
+  [
+    "th::_STRING_:Craft a detailed text prompt that captures your creative vision, or upload a reference image to guide the style and setting.",
+    "สร้างพรอมต์ข้อความโดยละเอียดที่รวบรวมวิสัยทัศน์สร้างสรรค์ของคุณ หรืออัปโหลดภาพอ้างอิงเพื่อแนะนำสไตล์และการตั้งค่า"
+  ],
+  [
+    "th::_STRING_:2. Select a Model",
+    "2. เลือกรุ่น"
+  ],
+  [
+    "th::_STRING_:3. Generate Your Video",
+    "สร้างวิดีโอของคุณ"
+  ],
+  [
+    "th::_STRING_:A Revolution in Film and Television Production and Content Creation",
+    "การปฏิวัติในการผลิตภาพยนตร์และโทรทัศน์และการสร้างเนื้อหา"
+  ],
+  [
+    "th::_STRING_:Veo 3.1 is a game-changing tool for film and television production and content creation. Independent filmmakers and content creators can use Veo 3.1 to quickly transform scripts into dynamic scene previews and proof-of-concept videos, significantly accelerating the creative visualization process. This not only significantly reduces traditional shooting and post-production costs, but also means that Veo 3.1 helps creators lock in the optimal visual approach early in the production process, improving the final quality of their work.",
+    "Veo 3.1 เป็นเครื่องมือที่เปลี่ยนแปลงเกมสำหรับการผลิตภาพยนตร์และโทรทัศน์และการสร้างเนื้อหา ผู้สร้างภาพยนตร์อิสระและผู้สร้างเนื้อหาสามารถใช้ Veo 3.1 เพื่อแปลงสคริปต์เป็นตัวอย่างฉากแบบไดนามิกและวิดีโอแนวคิดได้อย่างรวดเร็ว ซึ่งช่วยเร่งกระบวนการสร้างภาพให้เร็วขึ้นอย่างมาก สิ่งนี้ไม่เพียงแต่ช่วยลดต้นทุนการถ่ายทำและการผลิตหลังการถ่ายทำแบบดั้งเดิมอย่างมากเท่านั้น แต่ยังหมายความว่า Veo 3.1 ช่วยให้ผู้สร้างสามารถกำหนดแนวทางภาพที่ดีที่สุดในช่วงต้นของกระบวนการผลิต ซึ่งช่วยปรับปรุงคุณภาพสุดท้ายของงานของพวกเขา"
+  ],
+  [
+    "th::_STRING_:Efficiently Drive Advertising and Marketing",
+    "ขับเคลื่อนโฆษณาและการตลาดอย่างมีประสิทธิภาพ"
+  ],
+  [
+    "th::_STRING_:Empowering the future of education and corporate training",
+    "ส่งเสริมอนาคตของการศึกษาและการฝึกอบรมขององค์กร"
+  ],
+  [
+    "th::_STRING_:For the education and training sector, Veo 3.1 transforms abstract and complex concepts into vivid and intuitive instructional videos. Educational institutions and corporate training departments can use Veo 3.1 to generate customized, highly interactive content for students at varying learning levels, breaking the limitations of traditional learning methods. The application of Veo 3.1 not only significantly improves student engagement and knowledge absorption, but also opens up new possibilities for large-scale personalized education and training.",
+    "สำหรับภาคการศึกษาและการฝึกอบรม Veo 3.1 เปลี่ยนแนวคิดที่เป็นนามธรรมและซับซ้อนให้เป็นวิดีโอการสอนที่ชัดเจนและใช้งานง่าย สถาบันการศึกษาและแผนกฝึกอบรมขององค์กรสามารถใช้ Veo 3.1 เพื่อสร้างเนื้อหาที่ปรับแต่งได้สูงและโต้ตอบได้สำหรับนักเรียนในระดับการเรียนรู้ที่แตกต่างกัน ทำลายข้อจำกัดของวิธีการเรียนรู้แบบดั้งเดิม การประยุกต์ใช้ Veo 3.1 ไม่เพียงแต่ช่วยเพิ่มการมีส่วนร่วมของนักเรียนและการดูดซึมความรู้ได้อย่างมากเท่านั้น แต่ยังเปิดโอกาสใหม่ๆ สำหรับการศึกษาและการฝึกอบรมส่วนบุคคลในวงกว้างอีกด้วย"
+  ],
+  [
+    "th::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "th::_STRING_:Independent Filmmaker",
+    "ผู้สร้างภาพยนตร์อิสระ"
+  ],
+  [
+    "th::_STRING_:Maria Garcia",
+    "มาเรีย การ์เซีย"
+  ],
+  [
+    "th::_STRING_:Digital Marketing Manager",
+    "ผู้จัดการฝ่ายการตลาดดิจิทัล"
+  ],
+  [
+    "th::_STRING_:Chen Wei",
+    "เฉิน เหว่ย"
+  ],
+  [
+    "th::_STRING_:Animation and VFX Instructor",
+    "ผู้สอนแอนิเมชั่นและ VFX"
+  ],
+  [
+    "tr::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "tr::_STRING_:AI Awards 2024",
+    "AI Ödülleri 2024"
+  ],
+  [
+    "tr::_STRING_:2 Million",
+    "2 Milyon"
+  ],
+  [
+    "tr::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "tr::_STRING_:Independent Filmmaker",
+    "Bağımsız Film Yapımcısı"
+  ],
+  [
+    "tr::_STRING_:Maria Garcia",
+    "Maria Garcia"
+  ],
+  [
+    "tr::_STRING_:Digital Marketing Manager",
+    "Dijital Pazarlama Yöneticisi"
+  ],
+  [
+    "tr::_STRING_:Chen Wei",
+    "Chen Wei"
+  ],
+  [
+    "tr::_STRING_:Animation and VFX Instructor",
+    "Animasyon ve VFX Eğitmeni"
+  ],
+  [
+    "tw::_STRING_:Alex Schmidt",
+    "Alex Schmidt"
+  ],
+  [
+    "tw::_STRING_:Maria Garcia",
+    "瑪麗亞·加西亞"
+  ],
+  [
+    "tw::_STRING_:Chen Wei",
+    "陳偉"
+  ],
+  [
+    "zh::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "zh::_STRING_:AI Awards 2024",
+    "AI 奖项 2024"
+  ],
+  [
+    "zh::_STRING_:Alex Schmidt",
+    "亚历克斯·施密特"
+  ],
+  [
+    "zh::_STRING_:Maria Garcia",
+    "玛丽亚·加西亚"
+  ],
+  [
+    "zh::_STRING_:Chen Wei",
+    "陈伟"
   ]
 ]

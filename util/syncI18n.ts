@@ -2,7 +2,12 @@ import { logChanges } from "./logger";
 import { translator } from "./translator";
 import { getOssUtil, OSS_LANG_DIR, OssUtil } from "./oss";
 import { isJsonChanged, unflattenJSON, flatten, chunkArray } from ".";
-import { createCommitIdVersionMapping } from "./versioning";
+import {
+  createCommitIdVersionMapping,
+  getPendingPromoteRequests,
+  removePromoteRequest,
+  getLangVersionByCommitId,
+} from "./versioning";
 
 interface SyncI18nOptions {
   currentVersion: string; // 当前版本 --- 准备上传的版本
@@ -297,5 +302,88 @@ export async function run({
   // --- 9. 建立 Commit ID 与 Lang Version 的映射 ---
   if (commitId) {
     await createCommitIdVersionMapping(commitId, currentVersion);
+  }
+
+  // --- 10. 检查并执行待推广请求 ---
+  await processPendingPromoteRequests(ossUtil, currentVersion, projectId);
+}
+
+/**
+ * 处理待推广请求
+ * 检查是否有待推广的请求，如果有且对应的版本已完成翻译，则自动执行推广
+ */
+async function processPendingPromoteRequests(
+  ossUtil: OssUtil,
+  currentVersion: string,
+  projectId: string | null
+): Promise<void> {
+  try {
+    // 只获取当前项目的待推广请求
+    const pendingRequests = await getPendingPromoteRequests(
+      projectId || undefined
+    );
+
+    if (pendingRequests.length === 0) {
+      console.log("[syncI18n] 没有待推广的请求");
+      return;
+    }
+
+    console.log(
+      `[syncI18n] 发现 ${pendingRequests.length} 个待推广请求，开始处理...`
+    );
+
+    for (const request of pendingRequests) {
+      try {
+        // 检查项目 ID 是否匹配
+        if (projectId && request.projectId !== projectId) {
+          console.log(
+            `[syncI18n] 推广请求 ${request.commitId} 项目 ID 不匹配，跳过`
+          );
+          continue;
+        }
+
+        // 检查当前版本是否与请求的 commitId 匹配
+        const requestVersion = await getLangVersionByCommitId(request.commitId);
+
+        if (requestVersion === currentVersion) {
+          // 检查当前版本是否完整（包含所有必要的语言文件）
+          const { files } = await ossUtil.listJsonFilesInDirectory(
+            `${OSS_LANG_DIR}${currentVersion}/`
+          );
+
+          // 检查版本完整性：至少应该包含 en.json 和其他语言文件
+          const hasEnFile = files.some((f) => f.name === "en.json");
+          const hasOtherLangFiles = files.some(
+            (f) => f.name !== "en.json" && f.name.endsWith(".json")
+          );
+
+          if (hasEnFile && hasOtherLangFiles && files.length > 1) {
+            console.log(
+              `[syncI18n] 版本 ${currentVersion} 翻译完成，自动推广到 current 目录`
+            );
+            await ossUtil.copyVersionToCurrent(currentVersion);
+            await removePromoteRequest(request.commitId);
+            console.log(
+              `[syncI18n] 已处理推广请求: ${request.commitId} -> ${currentVersion}`
+            );
+          } else {
+            console.log(
+              `[syncI18n] 版本 ${currentVersion} 不完整（文件数: ${files.length}），跳过推广`
+            );
+          }
+        } else {
+          console.log(
+            `[syncI18n] 推广请求 ${request.commitId} 对应的版本 ${requestVersion} 与当前版本 ${currentVersion} 不匹配，跳过`
+          );
+        }
+      } catch (error) {
+        console.error(
+          `[syncI18n] 处理推广请求失败: ${request.commitId}`,
+          error
+        );
+      }
+    }
+  } catch (error) {
+    console.error("[syncI18n] 处理待推广请求时发生错误", error);
   }
 }
