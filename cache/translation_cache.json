@@ -4766,5 +4766,281 @@
   [
     "zh::_STRING_:Chen Wei",
     "陈伟"
+  ],
+  [
+    "da::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "da::_STRING_:Sora 2 Video Generator",
+    "Sora 2 Video Generator"
+  ],
+  [
+    "da::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "da::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "de::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "de::_STRING_:Sora 2 Video Generator",
+    "Sora 2 Video-Generator"
+  ],
+  [
+    "de::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "de::_STRING_:Narrative Director and Game Designer",
+    "Narrative Director und Game Designer"
+  ],
+  [
+    "de::_STRING_:Creative Director, Advertising Agency",
+    "Creative Director, Werbeagentur"
+  ],
+  [
+    "de::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "de::_STRING_:AI and Robotics Researcher",
+    "KI- und Robotikforscher"
+  ],
+  [
+    "es::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "es::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "es::_STRING_:Dr. Lena Petrova",
+    "Dra. Lena Petrova"
+  ],
+  [
+    "fr::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "fr::_STRING_:Over 5,000,000",
+    "Over 5,000,000"
+  ],
+  [
+    "fr::_STRING_:2 Million",
+    "2 Millions"
+  ],
+  [
+    "fr::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "fr::_STRING_:Narrative Director and Game Designer",
+    "Directeur narratif et concepteur de jeux"
+  ],
+  [
+    "fr::_STRING_:Creative Director, Advertising Agency",
+    "Directeur de la création, Agence de publicité"
+  ],
+  [
+    "fr::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "fr::_STRING_:AI and Robotics Researcher",
+    "Chercheur en IA et robotique"
+  ],
+  [
+    "id::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "id::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "id::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "it::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "it::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "it::_STRING_:Narrative Director and Game Designer",
+    "Narrative Director and Game Designer"
+  ],
+  [
+    "it::_STRING_:Creative Director, Advertising Agency",
+    "Direttore creativo, Agenzia pubblicitaria"
+  ],
+  [
+    "it::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "it::_STRING_:AI and Robotics Researcher",
+    "Ricercatore di intelligenza artificiale e robotica"
+  ],
+  [
+    "ja::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "ja::_STRING_:Jasmine Kaur",
+    "ジャスミン・カウル"
+  ],
+  [
+    "ja::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "ko::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "ko::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "ko::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "nb::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "nb::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "nb::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "nl::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "nl::_STRING_:Sora 2 Video Generator",
+    "Sora 2 Video Generator"
+  ],
+  [
+    "nl::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "nl::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "pl::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "pl::_STRING_:2 Million",
+    "2 Miliony"
+  ],
+  [
+    "pl::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "pl::_STRING_:Narrative Director and Game Designer",
+    "Dyrektor narracyjny i Projektant gier"
+  ],
+  [
+    "pl::_STRING_:Creative Director, Advertising Agency",
+    "Dyrektor Kreatywny, Agencja Reklamowa"
+  ],
+  [
+    "pl::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "pl::_STRING_:AI and Robotics Researcher",
+    "Badacz AI i Robotyki"
+  ],
+  [
+    "pt::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "pt::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "pt::_STRING_:Dr. Lena Petrova",
+    "Dra. Lena Petrova"
+  ],
+  [
+    "ru::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "ru::_STRING_:Jasmine Kaur",
+    "Жасмин Каур"
+  ],
+  [
+    "ru::_STRING_:Dr. Lena Petrova",
+    "Dr. Лена Петрова"
+  ],
+  [
+    "th::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "th::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "th::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "tr::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "tr::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "tr::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "tw::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "tw::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "tw::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
+  ],
+  [
+    "zh::_STRING_:Sora 2",
+    "Sora 2"
+  ],
+  [
+    "zh::_STRING_:Jasmine Kaur",
+    "Jasmine Kaur"
+  ],
+  [
+    "zh::_STRING_:Dr. Lena Petrova",
+    "Dr. Lena Petrova"
   ]
 ]

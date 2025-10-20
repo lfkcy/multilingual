@@ -10,6 +10,11 @@ import { apiKeyAuth } from "../util/middleware";
 import {
   getLangVersionByCommitId,
   recordPromoteRequest,
+  addTranslationTask,
+  getPendingTaskCount,
+  getNextTranslationTask,
+  updateTranslationTaskStatus,
+  removeTranslationTask,
 } from "../util/versioning";
 import { runI18nSync } from "../util/runI18nSync";
 
@@ -34,12 +39,24 @@ async function executeI18nSync(
   error?: string;
 }> {
   try {
-    // 1. 尝试获取文件锁（唯一真源）
+    // 1. 尝试获取文件锁
     const lockAcquired = await acquireLock();
     if (!lockAcquired) {
+      // 如果无法获取锁，将任务添加到队列中
+      console.log(`[${projectId}] 翻译服务忙碌，将任务添加到队列中...`);
+      
+      const taskId = await addTranslationTask({
+        projectId: projectId || 'unknown',
+        uploadedEnJsonContent,
+        promoteToCurrent,
+        commitId,
+      });
+
+      const pendingCount = await getPendingTaskCount(projectId || undefined);
+      
       return {
-        code: 429,
-        message: "多语言同步任务正在进行中，请稍后再试（文件锁被占用）。",
+        code: 0,
+        message: `翻译服务忙碌, 任务已加入队列。任务ID: ${taskId}，当前项目队列位置: ${pendingCount}`,
       };
     }
 
@@ -60,6 +77,8 @@ async function executeI18nSync(
       } finally {
         stopHeartbeat();
         releaseLock();
+        // 释放锁后，处理队列中的下一个任务
+        await processNextQueuedTask();
       }
     })();
 
@@ -259,7 +278,7 @@ router.post("/update-lang", apiKeyAuth, async (req: any, res: any) => {
         return res.json({
           code: 0,
           data: null,
-          message: `${lang}.json 更新成功，并已触发多语言同步任务。`,
+          message: syncResult.message || `${lang}.json 更新成功，并已触发多语言同步任务。`,
         });
       } else {
         return res.status(syncResult.code).json({
@@ -419,5 +438,66 @@ router.post("/promote-version", apiKeyAuth, async (req: any, res: any) => {
 //     });
 //   }
 // });
+
+/**
+ * 处理队列中的下一个翻译任务
+ */
+async function processNextQueuedTask(): Promise<void> {
+  try {
+    const nextTask = await getNextTranslationTask();
+    
+    if (!nextTask) {
+      console.log("[QUEUE] 队列中没有待处理的任务");
+      return;
+    }
+
+    console.log(`[QUEUE] 开始处理队列中的任务: ${nextTask.id} (项目: ${nextTask.projectId})`);
+
+    // 尝试获取锁
+    const lockAcquired = await acquireLock();
+    if (!lockAcquired) {
+      console.log(`[QUEUE] 无法获取锁，任务 ${nextTask.id} 将等待下次处理`);
+      // 将任务状态重置为 pending
+      await updateTranslationTaskStatus(nextTask.id, 'pending');
+      return;
+    }
+
+    // 开启锁心跳
+    const stopHeartbeat = startLockHeartbeat();
+
+    console.log(`projectId: ${nextTask.projectId},commitId:${nextTask.commitId} 开启翻译`);
+    
+    
+    try {
+      await runI18nSync({
+        projectId: nextTask.projectId,
+        uploadedEnJsonContent: nextTask.uploadedEnJsonContent,
+        promoteToCurrent: nextTask.promoteToCurrent,
+        commitId: nextTask.commitId,
+      });
+      
+      console.log(`[QUEUE] 任务 ${nextTask.id} 处理完成`);
+      await updateTranslationTaskStatus(nextTask.id, 'completed');
+      await removeTranslationTask(nextTask.id);
+      
+    } catch (error: any) {
+      console.error(`[QUEUE] 任务 ${nextTask.id} 处理失败:`, error?.message || error);
+      await updateTranslationTaskStatus(nextTask.id, 'failed');
+      // 失败的任务不移除，可以稍后重试
+    } finally {
+      stopHeartbeat();
+      releaseLock();
+      
+      // 递归处理下一个任务
+      setTimeout(() => {
+        processNextQueuedTask().catch(err => {
+          console.error("[QUEUE] 处理下一个任务时发生错误:", err);
+        });
+      }, 1000); // 延迟1秒后处理下一个任务
+    }
+  } catch (error) {
+    console.error("[QUEUE] 处理队列任务时发生错误:", error);
+  }
+}
 
 export default router;
