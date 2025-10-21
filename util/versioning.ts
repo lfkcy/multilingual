@@ -5,14 +5,22 @@ import path from "path";
 function getProjectRoot(): string {
   // 在开发环境中，__dirname 是 util/
   // 在生产环境中，__dirname 是 dist/util/
-  const isProduction = __dirname.includes('dist');
-  return isProduction ? path.resolve(__dirname, '../../') : path.resolve(__dirname, '../');
+  const isProduction = __dirname.includes("dist");
+  return isProduction
+    ? path.resolve(__dirname, "../../")
+    : path.resolve(__dirname, "../");
 }
 
 const PROJECT_ROOT = getProjectRoot();
 const CID_MAPPING_FILE = path.resolve(PROJECT_ROOT, "cache/cid_mapping.json");
-const PROMOTE_REQUESTS_FILE = path.resolve(PROJECT_ROOT, "cache/promote_requests.json");
-const TRANSLATION_QUEUE_FILE = path.resolve(PROJECT_ROOT, "cache/translation_queue.json");
+const PROMOTE_REQUESTS_FILE = path.resolve(
+  PROJECT_ROOT,
+  "cache/promote_requests.json"
+);
+const TRANSLATION_QUEUE_FILE = path.resolve(
+  PROJECT_ROOT,
+  "cache/translation_queue.json"
+);
 
 /**
  * 生成当前时间戳作为版本号，格式为 YYYYMMDDHHmmss（本地时间）。
@@ -270,23 +278,29 @@ export interface TranslationTask {
   promoteToCurrent: boolean;
   commitId: string | null;
   timestamp: number;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
+  status: "pending" | "processing" | "completed" | "failed";
 }
 
 /**
  * 添加翻译任务到队列
  * @param task 翻译任务
  */
-export async function addTranslationTask(task: Omit<TranslationTask, 'id' | 'timestamp' | 'status'>): Promise<string> {
-  const taskId = `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+export async function addTranslationTask(
+  task: Omit<TranslationTask, "id" | "timestamp" | "status">
+): Promise<string> {
+  const taskId = `task_${Date.now()}_${Math.random()
+    .toString(36)
+    .substr(2, 9)}`;
   const fullTask: TranslationTask = {
     ...task,
     id: taskId,
     timestamp: Date.now(),
-    status: 'pending',
+    status: "pending",
   };
 
-  console.log(`[VERSIONING] 添加翻译任务到队列: ${taskId} (项目: ${task.projectId})`);
+  console.log(
+    `[VERSIONING] 添加翻译任务到队列: ${taskId} (项目: ${task.projectId})`
+  );
 
   let queue: TranslationTask[] = [];
 
@@ -301,25 +315,31 @@ export async function addTranslationTask(task: Omit<TranslationTask, 'id' | 'tim
       fs.mkdirSync(path.dirname(TRANSLATION_QUEUE_FILE), { recursive: true });
     }
   } catch (err) {
-    console.warn("[VERSIONING] Failed to parse translation_queue.json, reinitializing...", err);
+    console.warn(
+      "[VERSIONING] Failed to parse translation_queue.json, reinitializing...",
+      err
+    );
     queue = [];
   }
 
   // 检查是否已存在相同的任务（避免重复）
-  const existingTask = queue.find(t => 
-    t.projectId === task.projectId && 
-    t.commitId === task.commitId && 
-    t.status === 'pending'
+  const existingTask = queue.find(
+    (t) =>
+      t.projectId === task.projectId &&
+      t.commitId === task.commitId &&
+      t.status === "pending"
   );
 
   if (existingTask) {
-    console.log(`[VERSIONING] 项目 ${task.projectId} 已有待处理的翻译任务，跳过重复添加`);
+    console.log(
+      `[VERSIONING] 项目 ${task.projectId} 已有待处理的翻译任务，跳过重复添加`
+    );
     return existingTask.id;
   }
 
   queue.push(fullTask);
   fs.writeFileSync(TRANSLATION_QUEUE_FILE, JSON.stringify(queue, null, 2));
-  
+
   return taskId;
 }
 
@@ -339,15 +359,17 @@ export async function getNextTranslationTask(): Promise<TranslationTask | null> 
     }
 
     const queue: TranslationTask[] = JSON.parse(content);
-    
+
     // 查找第一个待处理的任务
-    const nextTask = queue.find(task => task.status === 'pending');
-    
+    const nextTask = queue.find((task) => task.status === "pending");
+
     if (nextTask) {
       // 标记为处理中
-      nextTask.status = 'processing';
+      nextTask.status = "processing";
       fs.writeFileSync(TRANSLATION_QUEUE_FILE, JSON.stringify(queue, null, 2));
-      console.log(`[VERSIONING] 获取下一个翻译任务: ${nextTask.id} (项目: ${nextTask.projectId})`);
+      console.log(
+        `[VERSIONING] 获取下一个翻译任务: ${nextTask.id} (项目: ${nextTask.projectId})`
+      );
     }
 
     return nextTask || null;
@@ -362,7 +384,10 @@ export async function getNextTranslationTask(): Promise<TranslationTask | null> 
  * @param taskId 任务 ID
  * @param status 新状态
  */
-export async function updateTranslationTaskStatus(taskId: string, status: TranslationTask['status']): Promise<void> {
+export async function updateTranslationTaskStatus(
+  taskId: string,
+  status: TranslationTask["status"]
+): Promise<void> {
   try {
     if (!fs.existsSync(TRANSLATION_QUEUE_FILE)) {
       return;
@@ -374,8 +399,8 @@ export async function updateTranslationTaskStatus(taskId: string, status: Transl
     }
 
     const queue: TranslationTask[] = JSON.parse(content);
-    const taskIndex = queue.findIndex(task => task.id === taskId);
-    
+    const taskIndex = queue.findIndex((task) => task.id === taskId);
+
     if (taskIndex !== -1) {
       queue[taskIndex].status = status;
       fs.writeFileSync(TRANSLATION_QUEUE_FILE, JSON.stringify(queue, null, 2));
@@ -402,10 +427,13 @@ export async function removeTranslationTask(taskId: string): Promise<void> {
     }
 
     const queue: TranslationTask[] = JSON.parse(content);
-    const filteredQueue = queue.filter(task => task.id !== taskId);
-    
+    const filteredQueue = queue.filter((task) => task.id !== taskId);
+
     if (filteredQueue.length !== queue.length) {
-      fs.writeFileSync(TRANSLATION_QUEUE_FILE, JSON.stringify(filteredQueue, null, 2));
+      fs.writeFileSync(
+        TRANSLATION_QUEUE_FILE,
+        JSON.stringify(filteredQueue, null, 2)
+      );
       console.log(`[VERSIONING] 移除翻译任务: ${taskId}`);
     }
   } catch (err) {
@@ -430,11 +458,13 @@ export async function getPendingTaskCount(projectId?: string): Promise<number> {
     }
 
     const queue: TranslationTask[] = JSON.parse(content);
-    
+
     if (projectId) {
-      return queue.filter(task => task.projectId === projectId && task.status === 'pending').length;
+      return queue.filter(
+        (task) => task.projectId === projectId && task.status === "pending"
+      ).length;
     } else {
-      return queue.filter(task => task.status === 'pending').length;
+      return queue.filter((task) => task.status === "pending").length;
     }
   } catch (err) {
     console.warn("[VERSIONING] Failed to get pending task count", err);
