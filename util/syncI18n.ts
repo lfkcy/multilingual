@@ -8,6 +8,7 @@ import {
   removePromoteRequest,
   getLangVersionByCommitId,
 } from "./versioning";
+import { retryGetFile, retryGetLanguageFile } from "./retry";
 
 interface SyncI18nOptions {
   currentVersion: string; // 当前版本 --- 准备上传的版本
@@ -82,7 +83,8 @@ export async function run({
   let stableEnJsonContent: Record<string, any> = {}; // 前一个版本
 
   try {
-    const stableCurrentVersionEnJson = await ossUtil.getFileContent(
+    const stableCurrentVersionEnJson = await retryGetFile(
+      () => ossUtil.getFileContent(`${OSS_CURRENT_LANG_DIR}en.json`),
       `${OSS_CURRENT_LANG_DIR}en.json`
     ); // current 目录的 en.json 文件内容
 
@@ -91,13 +93,15 @@ export async function run({
       stableEnJsonContent = JSON.parse(stableCurrentVersionEnJson);
     } else if (latestVersion) {
       // --- 2.2. 获取上一个版本的 en.json 文件内容 ---
-      const stableLastVersionEnJson = await ossUtil.getFileContent(
+      const stableLastVersionEnJson = await retryGetFile(
+        () => ossUtil.getFileContent(`${OSS_LATEST_LANG_DIR}en.json`),
         `${OSS_LATEST_LANG_DIR}en.json`
       );
       stableEnJsonContent = JSON.parse(stableLastVersionEnJson);
     } else {
       // --- 2.3. 获取根目录的 en.json 文件内容 ---
-      const stableDirVersionEnJson = await ossUtil.getFileContent(
+      const stableDirVersionEnJson = await retryGetFile(
+        () => ossUtil.getFileContent(`${OSS_LANG_DIR}en.json`),
         `${OSS_LANG_DIR}en.json`
       );
       stableEnJsonContent = JSON.parse(stableDirVersionEnJson);
@@ -152,10 +156,17 @@ export async function run({
 
     let targetLangJsonContent: Record<string, any>; // 目标语言 JSON 内容
     try {
-      const jsonStr = await ossUtil.getFileContent(
-        `${OSS_CURRENT_LANG_DIR}${lang}.json`
-      );
-      targetLangJsonContent = jsonStr.trim() ? JSON.parse(jsonStr) : {};
+      // 采取降级处理
+      const { content, isFallback, isFileNotFound } =
+        await retryGetLanguageFile(
+          () => ossUtil.getFileContent(`${OSS_CURRENT_LANG_DIR}${lang}.json`),
+          latestVersion
+            ? () => ossUtil.getFileContent(`${OSS_LATEST_LANG_DIR}${lang}.json`)
+            : null,
+          lang,
+          { maxRetries: 3, retryDelay: 1000 }
+        );
+      targetLangJsonContent = content;
     } catch (err) {
       console.warn(`⚠️ 未找到 ${lang}.json 文件，已创建空对象替代`);
       targetLangJsonContent = {};
