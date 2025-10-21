@@ -8,7 +8,7 @@ import {
   removePromoteRequest,
   getLangVersionByCommitId,
 } from "./versioning";
-import { retryGetFile, retryGetLanguageFile } from "./retry";
+import { retryGetFile, retryGetLanguageFile, withRetry } from "./retry";
 
 interface SyncI18nOptions {
   currentVersion: string; // 当前版本 --- 准备上传的版本
@@ -277,7 +277,8 @@ export async function run({
     if (content) {
       const ossPath = `${OSS_VERSIONED_LANG_DIR}${lang}.json`;
       try {
-        await ossUtil.uploadFile(ossPath, content);
+        // 使用 withRetry 进行重试
+        await withRetry(async () => ossUtil.uploadFile(ossPath, content));
         console.log(`✅ 已上传 ${lang}.json 到 ${ossPath}`);
       } catch (error: any) {
         console.error(
@@ -296,9 +297,8 @@ export async function run({
   // --- 7. 更新 OSS 上传版本的 en.json ---
   try {
     const ossPath = `${OSS_VERSIONED_LANG_DIR}en.json`;
-    await ossUtil.uploadFile(
-      ossPath,
-      JSON.stringify(currentEnJsonContent, null, 2)
+    await withRetry(async () =>
+      ossUtil.uploadFile(ossPath, JSON.stringify(currentEnJsonContent, null, 2))
     );
     console.log("en.json 已更新。");
   } catch (error) {
