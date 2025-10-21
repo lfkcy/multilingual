@@ -19,7 +19,10 @@ const DEFAULT_RETRY_CONFIG: Required<RetryConfig> = {
   maxDelay: 10000,
   shouldRetry: (error: any) => {
     // 默认重试条件：不是文件不存在错误
-    return !(error.message && error.message.includes("文件不存在"));
+    return !(
+      error.code === "NoSuchKey" ||
+      (error.message && error.message.includes("文件不存在"))
+    );
   },
 };
 
@@ -141,7 +144,10 @@ export async function retryGetLanguageFile(
     console.log(`✅ 成功从主要源获取 ${lang}.json`);
   } catch (error: any) {
     // 检查是否为文件不存在
-    if (error.message && error.message.includes("文件不存在")) {
+    if (
+      error.code === "NoSuchKey" ||
+      (error.message && error.message.includes("文件不存在"))
+    ) {
       console.warn(`⚠️ ${lang}.json 文件不存在，将创建新文件`);
       isFileNotFound = true;
       content = {};
