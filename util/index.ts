@@ -1,9 +1,18 @@
 import fs from "fs";
 import path from "path";
+import { getProjectQueueStatus } from "./versioning";
 
 const LOCK_FILE = path.resolve(__dirname, "./sync_lock");
 const LOCK_TIMEOUT_MS = 1000 * 60 * 1; // 1分钟
 const LOCK_HEARTBEAT_INTERVAL_MS = 15 * 1000; // 心跳 15s
+
+// 项目锁信息接口
+interface ProjectLockInfo {
+  projectId: string;
+  taskId?: string;
+  timestamp: number;
+  status: "processing" | "queued";
+}
 
 /**
  * 拍平json
@@ -105,9 +114,14 @@ function isJsonChanged(
 
 /**
  * 尝试获取文件锁，并支持超时机制
+ * @param projectId 项目ID，用于记录锁信息
+ * @param taskId 任务ID，可选
  * @returns {Promise<boolean>} 如果成功获取锁返回 true，否则返回 false
  */
-async function acquireLock(): Promise<boolean> {
+async function acquireLock(
+  projectId?: string,
+  taskId?: string
+): Promise<boolean> {
   return new Promise((resolve, reject) => {
     // 尝试以独占写入模式创建文件
     fs.open(LOCK_FILE, "wx", async (err, fd) => {
@@ -116,25 +130,39 @@ async function acquireLock(): Promise<boolean> {
           // 锁文件已存在，检查是否超时
           try {
             const lockContent = fs.readFileSync(LOCK_FILE, "utf-8");
-            const lockTimestamp = parseInt(lockContent, 10); // 解析时间戳
+            let lockInfo: ProjectLockInfo;
 
-            if (isNaN(lockTimestamp)) {
-              console.warn(
-                `⚠️ 锁文件内容无效，尝试强制删除并重新获取锁: ${LOCK_FILE}`
-              );
-              releaseLock(); // 内容无效，尝试释放旧锁
-              return resolve(await acquireLock()); // 递归重试
+            try {
+              // 尝试解析为JSON格式（新格式）
+              lockInfo = JSON.parse(lockContent);
+            } catch {
+              // 兼容旧格式（纯时间戳）
+              const lockTimestamp = parseInt(lockContent, 10);
+              if (isNaN(lockTimestamp)) {
+                console.warn(
+                  `⚠️ 锁文件内容无效，尝试强制删除并重新获取锁: ${LOCK_FILE}`
+                );
+                releaseLock(); // 内容无效，尝试释放旧锁
+                return resolve(await acquireLock(projectId, taskId)); // 递归重试
+              }
+
+              // 转换为新格式
+              lockInfo = {
+                projectId: "legacy",
+                timestamp: lockTimestamp,
+                status: "processing",
+              };
             }
 
             const currentTime = Date.now();
-            if (currentTime - lockTimestamp > LOCK_TIMEOUT_MS) {
+            if (currentTime - lockInfo.timestamp > LOCK_TIMEOUT_MS) {
               console.warn(
                 `⚠️ 锁文件已超时 (${
-                  (currentTime - lockTimestamp) / 1000
+                  (currentTime - lockInfo.timestamp) / 1000
                 }s)，强制删除并重新获取锁: ${LOCK_FILE}`
               );
               releaseLock(); // 锁超时，强制释放
-              return resolve(await acquireLock()); // 递归重试获取锁
+              return resolve(await acquireLock(projectId, taskId)); // 递归重试获取锁
             } else {
               // 锁未超时，获取锁失败
               return resolve(false);
@@ -149,9 +177,15 @@ async function acquireLock(): Promise<boolean> {
         return reject(err);
       }
 
-      // 成功创建文件，写入当前时间戳作为锁的创建时间
-      const timestamp = Date.now().toString();
-      fs.write(fd, timestamp, (writeErr) => {
+      // 成功创建文件，写入锁信息
+      const lockInfo: ProjectLockInfo = {
+        projectId: projectId || "unknown",
+        taskId,
+        timestamp: Date.now(),
+        status: "processing",
+      };
+      const lockContent = JSON.stringify(lockInfo);
+      fs.write(fd, lockContent, (writeErr) => {
         fs.close(fd, (closeErr) => {
           if (closeErr) console.error("关闭锁文件描述符时发生错误:", closeErr);
         });
@@ -182,14 +216,40 @@ function releaseLock(): void {
 
 /**
  * 判断当前锁是否处于有效期内（用于跨请求/多实例状态探测）。
+ * @param projectId 项目ID，如果提供则只检查该项目的锁状态
  */
-function isLockActive(): boolean {
+function isLockActive(projectId?: string): boolean {
   try {
     if (!fs.existsSync(LOCK_FILE)) return false;
     const content = fs.readFileSync(LOCK_FILE, "utf-8");
-    const ts = parseInt(content, 10);
-    if (isNaN(ts)) return false;
-    return Date.now() - ts <= LOCK_TIMEOUT_MS;
+
+    let lockInfo: ProjectLockInfo;
+    try {
+      // 尝试解析为JSON格式（新格式）
+      lockInfo = JSON.parse(content);
+    } catch {
+      // 兼容旧格式（纯时间戳）
+      const ts = parseInt(content, 10);
+      if (isNaN(ts)) return false;
+
+      // 如果指定了项目ID，但锁是旧格式，返回false（旧格式无法区分项目）
+      if (projectId) return false;
+
+      return Date.now() - ts <= LOCK_TIMEOUT_MS;
+    }
+
+    // 检查时间是否超时
+    if (Date.now() - lockInfo.timestamp > LOCK_TIMEOUT_MS) {
+      return false;
+    }
+
+    // 如果指定了项目ID，检查是否匹配
+    if (projectId) {
+      return lockInfo.projectId === projectId;
+    }
+
+    // 未指定项目ID，返回全局锁状态
+    return true;
   } catch {
     return false;
   }
@@ -201,8 +261,30 @@ function isLockActive(): boolean {
 function refreshLockTimestamp(): void {
   try {
     if (!fs.existsSync(LOCK_FILE)) return;
-    const timestamp = Date.now().toString();
-    fs.writeFileSync(LOCK_FILE, timestamp, { encoding: "utf-8" });
+
+    const content = fs.readFileSync(LOCK_FILE, "utf-8");
+    let lockInfo: ProjectLockInfo;
+
+    try {
+      // 尝试解析为JSON格式（新格式）
+      lockInfo = JSON.parse(content);
+    } catch {
+      // 兼容旧格式（纯时间戳）
+      const ts = parseInt(content, 10);
+      if (isNaN(ts)) return;
+
+      // 转换为新格式
+      lockInfo = {
+        projectId: "legacy",
+        timestamp: ts,
+        status: "processing",
+      };
+    }
+
+    // 更新时间戳
+    lockInfo.timestamp = Date.now();
+    const updatedContent = JSON.stringify(lockInfo);
+    fs.writeFileSync(LOCK_FILE, updatedContent, { encoding: "utf-8" });
   } catch (err) {
     console.error("刷新锁文件时间戳失败:", (err as any)?.message || err);
   }
@@ -222,6 +304,62 @@ function startLockHeartbeat(): () => void {
   return () => clearInterval(timer);
 }
 
+/**
+ * 获取项目级别的翻译状态
+ * @param projectId 项目ID
+ * @returns 项目翻译状态信息
+ */
+async function getProjectSyncStatus(projectId: string): Promise<{
+  isAsyncing: boolean;
+  status: "idle" | "processing" | "queued";
+  taskId?: string;
+  timestamp?: number;
+}> {
+  try {
+    // 首先检查锁状态
+    const lockActive = isLockActive(projectId);
+
+    if (lockActive) {
+      // 项目正在处理中
+      if (!fs.existsSync(LOCK_FILE)) {
+        return { isAsyncing: false, status: "idle" };
+      }
+
+      const content = fs.readFileSync(LOCK_FILE, "utf-8");
+      let lockInfo: ProjectLockInfo;
+
+      try {
+        lockInfo = JSON.parse(content);
+      } catch {
+        return { isAsyncing: false, status: "idle" };
+      }
+
+      return {
+        isAsyncing: true,
+        status: "processing",
+        taskId: lockInfo.taskId,
+        timestamp: lockInfo.timestamp,
+      };
+    }
+
+    // 锁不活跃，检查队列状态
+    const queueStatus = await getProjectQueueStatus(projectId);
+
+    if (queueStatus.isInQueue) {
+      return {
+        isAsyncing: false,
+        status: queueStatus.status === "processing" ? "processing" : "queued",
+        taskId: queueStatus.taskId,
+        timestamp: queueStatus.timestamp,
+      };
+    }
+
+    return { isAsyncing: false, status: "idle" };
+  } catch {
+    return { isAsyncing: false, status: "idle" };
+  }
+}
+
 export {
   flatten,
   unflattenJSON,
@@ -232,4 +370,5 @@ export {
   isLockActive,
   startLockHeartbeat,
   refreshLockTimestamp,
+  getProjectSyncStatus,
 };

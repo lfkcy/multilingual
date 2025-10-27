@@ -471,3 +471,64 @@ export async function getPendingTaskCount(projectId?: string): Promise<number> {
     return 0;
   }
 }
+
+/**
+ * 检查项目是否在翻译队列中
+ * @param projectId 项目 ID
+ * @returns 项目队列状态信息
+ */
+export async function getProjectQueueStatus(projectId: string): Promise<{
+  isInQueue: boolean;
+  status: "idle" | "pending" | "processing";
+  taskId?: string;
+  timestamp?: number;
+}> {
+  try {
+    if (!fs.existsSync(TRANSLATION_QUEUE_FILE)) {
+      return { isInQueue: false, status: "idle" };
+    }
+
+    const content = fs.readFileSync(TRANSLATION_QUEUE_FILE, "utf8").trim();
+    if (!content) {
+      return { isInQueue: false, status: "idle" };
+    }
+
+    const queue: TranslationTask[] = JSON.parse(content);
+
+    // 查找该项目的任务
+    const projectTasks = queue.filter((task) => task.projectId === projectId);
+
+    if (projectTasks.length === 0) {
+      return { isInQueue: false, status: "idle" };
+    }
+
+    // 优先返回处理中的任务
+    const processingTask = projectTasks.find(
+      (task) => task.status === "processing"
+    );
+    if (processingTask) {
+      return {
+        isInQueue: true,
+        status: "processing",
+        taskId: processingTask.id,
+        timestamp: processingTask.timestamp,
+      };
+    }
+
+    // 然后返回待处理的任务
+    const pendingTask = projectTasks.find((task) => task.status === "pending");
+    if (pendingTask) {
+      return {
+        isInQueue: true,
+        status: "pending",
+        taskId: pendingTask.id,
+        timestamp: pendingTask.timestamp,
+      };
+    }
+
+    return { isInQueue: false, status: "idle" };
+  } catch (err) {
+    console.warn("[VERSIONING] Failed to get project queue status", err);
+    return { isInQueue: false, status: "idle" };
+  }
+}
