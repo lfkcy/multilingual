@@ -57,7 +57,7 @@ export async function run({
   const OSS_VERSIONED_LANG_DIR = `${OSS_LANG_DIR}${currentVersion}/`; // 上传版本目录 --- oss还并不存在
   const OSS_LATEST_LANG_DIR = `${OSS_LANG_DIR}${latestVersion}/`; // 当前 OSS 上已有的最新版本
   const OSS_CURRENT_LANG_DIR = `${OSS_LANG_DIR}current/`; // current 目录
-  const CHUNK_SIZE = 100; // 设置每个翻译批次的键数量阈值，例如500个键 --- 防止新增的key过于多导致json内容过于庞大
+  const CHUNK_SIZE = 70; // 设置每个翻译批次的键数量阈值，例如500个键 --- 防止新增的key过于多导致json内容过于庞大
 
   // --- 1. 获取基准 en.json 文件内容 ---
   let currentEnJsonContent: Record<string, any>;
@@ -98,17 +98,10 @@ export async function run({
         `${OSS_LATEST_LANG_DIR}en.json`
       );
       stableEnJsonContent = JSON.parse(stableLastVersionEnJson);
-    } else {
-      // --- 2.3. 获取根目录的 en.json 文件内容 ---
-      const stableDirVersionEnJson = await retryGetFile(
-        () => ossUtil.getFileContent(`${OSS_LANG_DIR}en.json`),
-        `${OSS_LANG_DIR}en.json`
-      );
-      stableEnJsonContent = JSON.parse(stableDirVersionEnJson);
     }
   } catch (error) {
-    console.error("获取 en.stable.json 失败", error);
-    throw error;
+    console.error("获取 en.stable.json 失败,初始化为空对象", error);
+    // throw error;
   }
 
   // --- 3. 差异比对 ---
@@ -126,16 +119,37 @@ export async function run({
   }
 
   // --- 4. 处理新增和修改的字段（触发翻译） ---
-  let langFiles: string[] = [];
+  let langFiles: string[] = [
+    "da",
+    "de",
+    "es",
+    "fr",
+    "id",
+    "it",
+    "ja",
+    "ko",
+    "nb",
+    "nl",
+    "pl",
+    "pt",
+    "ru",
+    "th",
+    "tr",
+    "tw",
+    "zh",
+  ];
   const allUpdatedLangContents: { [lang: string]: string } = {}; // 用于暂存所有语言的更新内容，等待所有处理完成后再统一上传
 
   // 获取所有 lang 文件（排除 en/en_stable）
   try {
     const res = await ossUtil.listJsonFilesInDirectory(OSS_CURRENT_LANG_DIR);
     if (res) {
-      langFiles = res.files
+      const files = res.files
         .map((f) => f.name)
         .filter((f) => !["en.json", "en_stable.json"].includes(f));
+      if (files.length > 0) {
+        langFiles = files;
+      }
     }
   } catch (error) {
     console.error("获取所有 lang 文件失败", error);
@@ -154,7 +168,7 @@ export async function run({
     const startTime = new Date();
     console.log(`\n🚀 开始同步 [${lang}] ${startTime.toLocaleString()}`);
 
-    let targetLangJsonContent: Record<string, any>; // 目标语言 JSON 内容
+    let targetLangJsonContent: Record<string, any> = {}; // 目标语言 JSON 内容
     try {
       // 采取降级处理
       const { content, isFallback, isFileNotFound } =
