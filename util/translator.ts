@@ -1,25 +1,10 @@
-import { GoogleGenAI, HarmBlockThreshold, HarmCategory } from "@google/genai";
-import { fetch as undiciFetch, ProxyAgent } from "undici";
 import * as fs from "fs";
 import * as path from "path";
 
-const isProduction = process.env.NODE_ENV === "production";
-
-// 如果非生产环境，则设置代理 --- 生产环境需部署在海外服务器
-// if (!isProduction) {
-// 设置你的代理地址，比如 Clash 的 HTTP 代理
-const proxyAgent = new ProxyAgent(
-  process.env.HTTP_PROXY || "http://127.0.0.1:7890"
-);
-
-// 重写全局 fetch（Gemini SDK 内部使用全局的 fetch）
-globalThis.fetch = ((input: any, init?: any) => {
-  return undiciFetch(input, { ...init, dispatcher: proxyAgent });
-}) as any;
-// }
-
-// API 密钥列表
-const API_KEYS = process.env.GEMINI_API_KEYS!.split(",") || [];
+// 302.ai API 配置
+const API_KEY = process.env.MODEL_API_KEY!;
+const API_ENDPOINT = "https://api.302.ai/v1/chat/completions";
+const MODEL_NAME = "gemini-2.5-flash";
 
 // 缓存目录和文件路径
 const CACHE_DIR = "cache";
@@ -69,49 +54,99 @@ function isLikelyIdentifierOrCode(text: string): boolean {
 }
 
 /**
- * Gemini 翻译器类，用于处理 JSON 结构的多语言翻译
+ * 翻译器类，用于处理 JSON 结构的多语言翻译
  */
 class GeminiTranslator {
-  private apiKeys: string[];
-  private currentKeyIndex: number;
-  private ai: GoogleGenAI;
+  private apiKey: string;
+  private apiEndpoint: string;
+  private modelName: string;
   private cache: Map<string, string>;
   private lastCallTime: number;
 
-  constructor(apiKeys: string[]) {
-    this.apiKeys = apiKeys;
-    this.currentKeyIndex = 0;
-    this.ai = this.initializeGenAI(this.apiKeys[this.currentKeyIndex]);
+  constructor(apiKey: string, apiEndpoint: string, modelName: string) {
+    this.apiKey = apiKey;
+    this.apiEndpoint = apiEndpoint;
+    this.modelName = modelName;
     this.cache = new Map();
     this.lastCallTime = 0;
     this.loadCache();
-    this.loadProgress();
 
     // 创建缓存目录
     if (!fs.existsSync(CACHE_DIR)) {
       fs.mkdirSync(CACHE_DIR);
     }
+
+    console.log(`\n🔑 使用 302.ai API: ${this.apiEndpoint}`);
+    console.log(`🤖 模型: ${this.modelName}`);
   }
 
   /**
-   * 初始化 GoogleGenAI 实例
-   * @param apiKey
-   * @returns
+   * 清理API响应中的markdown代码块标记
    */
-  private initializeGenAI(apiKey: string): GoogleGenAI {
-    console.log(`\n🔑 正在使用 API 密钥: ${apiKey.substring(0, 5)}...`);
-    return new GoogleGenAI({ apiKey });
+  private cleanJsonResponse(responseText: string): string {
+    // 移除 ```json 和 ``` 标记
+    let cleaned = responseText.trim();
+
+    // 移除开头的 ```json 或 ```
+    if (cleaned.startsWith("```json")) {
+      cleaned = cleaned.substring(7);
+    } else if (cleaned.startsWith("```")) {
+      cleaned = cleaned.substring(3);
+    }
+
+    // 移除结尾的 ```
+    if (cleaned.endsWith("```")) {
+      cleaned = cleaned.substring(0, cleaned.length - 3);
+    }
+
+    return cleaned.trim();
   }
 
   /**
-   * 切换到下一个 API 密钥
+   * 调用 302.ai API 进行翻译
    */
-  private switchToNextKey(): void {
-    this.currentKeyIndex = (this.currentKeyIndex + 1) % this.apiKeys.length;
-    this.ai = this.initializeGenAI(this.apiKeys[this.currentKeyIndex]);
-    console.warn(
-      `⚠️ 切换到下一个 API 密钥。当前密钥索引: ${this.currentKeyIndex}`
-    );
+  private async callTranslationAPI(
+    prompt: string,
+    temperature: number = 0.1,
+    maxTokens: number = 8192
+  ): Promise<string> {
+    const headers = {
+      Accept: "application/json",
+      Authorization: `Bearer ${this.apiKey}`,
+      "Content-Type": "application/json",
+      Host: "api.302.ai",
+      Connection: "keep-alive",
+    };
+
+    const body = JSON.stringify({
+      model: this.modelName,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: temperature,
+    });
+
+    const response = await fetch(this.apiEndpoint, {
+      method: "POST",
+      headers: headers,
+      body: body,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`API 请求失败 (${response.status}): ${errorText}`);
+    }
+
+    const result = await response.json();
+
+    if (!result.choices || !result.choices[0] || !result.choices[0].message) {
+      throw new Error("API 返回格式错误");
+    }
+
+    return result.choices[0].message.content;
   }
 
   /**
@@ -251,46 +286,17 @@ Translated (${targetLang}):`;
     let attempt = 0;
 
     while (attempt < maxAttempts) {
-      await this.throttle(); // 依然遵守节流
+      // await this.throttle(); // 依然遵守节流
 
       try {
-        const result = await this.ai.models.generateContent({
-          model: "gemini-2.0-flash-lite",
-          contents: [
-            {
-              role: "user",
-              parts: [
-                { text: this.getTranslateTextInstruction(text, targetLang) },
-              ],
-            },
-          ],
-          config: {
-            temperature: 0.1, // 更低的温度以获得更直接的翻译
-            maxOutputTokens: 1000, // 足够长的单行文本
-            safetySettings: [
-              {
-                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-              },
-            ],
-          },
-        });
-        if (!result.text) {
+        const prompt = this.getTranslateTextInstruction(text, targetLang);
+        const responseText = await this.callTranslationAPI(prompt, 0.1, 1000);
+        // 清理可能的markdown标记
+        const translatedText = this.cleanJsonResponse(responseText).trim();
+
+        if (!translatedText) {
           throw new Error("单行翻译返回空文本");
         }
-        const translatedText = result.text.trim();
         // 简单的校验，避免模型返回空或非预期内容
         if (!translatedText || translatedText.length < 1) {
           // 长度小于1，视为无效翻译
@@ -311,8 +317,8 @@ Translated (${targetLang}):`;
           error.message.includes("Quota exceeded") ||
           error.message.includes("RESOURCE_EXHAUSTED")
         ) {
-          console.warn("   ❗ 检测到配额/密钥错误，切换密钥。");
-          this.switchToNextKey();
+          console.warn("   ❗ 检测到配额/密钥错误。");
+          await new Promise((resolve) => setTimeout(resolve, 5000));
         } else {
           console.log(`   ❗ 等待 ${2000 / 1000} 秒后重试...`);
           await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -560,45 +566,6 @@ Translated (${targetLang}):`;
   }
 
   /**
-   * 加载翻译进度
-   */
-  private loadProgress(): void {
-    try {
-      if (fs.existsSync(PROGRESS_FILE)) {
-        const data = fs.readFileSync(PROGRESS_FILE, "utf8");
-        const parsedProgress = JSON.parse(data);
-
-        this.currentKeyIndex = parsedProgress.currentKeyIndex || 0; // 加载上次使用的密钥索引
-        this.ai = this.initializeGenAI(this.apiKeys[this.currentKeyIndex]); // 重新初始化 AI 实例
-        console.log(
-          `✅ 已从 ${PROGRESS_FILE} 加载上次密钥索引 ${this.currentKeyIndex}。`
-        );
-      }
-    } catch (error) {
-      console.error(`❌ 加载翻译进度失败: ${error}`);
-    }
-  }
-
-  /**
-   * 保存翻译进度
-   */
-  private saveProgress(): void {
-    try {
-      const progressData = {
-        currentKeyIndex: this.currentKeyIndex,
-      };
-      fs.writeFileSync(
-        PROGRESS_FILE,
-        JSON.stringify(progressData, null, 2),
-        "utf8"
-      );
-      console.log(`💾 已保存翻译进度到 ${PROGRESS_FILE}。`);
-    } catch (error) {
-      console.error(`❌ 保存翻译进度失败: ${error}`);
-    }
-  }
-
-  /**
    * 翻译单个 JSON 文本块。
    * 这个方法包含重试机制、节流和错误处理，并新增了二次（单行）翻译逻辑，以最大限度提高成功率。
    * @param jsonChunk 要翻译的 JSON 文本片段
@@ -614,11 +581,10 @@ Translated (${targetLang}):`;
 
     if (this.cache.has(cacheKey)) {
       console.log(`🔄 命中缓存: ${jsonChunk.substring(0, 50)}...`);
-      this.saveProgress();
       return this.cache.get(cacheKey)!;
     }
 
-    const maxApiRetries = this.apiKeys.length * 2; // 每个 API 密钥尝试两次
+    const maxApiRetries = 3; // 最多重试3次
     let globalAttempt = 0;
 
     // 尝试解析原始 JSON，以便后续对比
@@ -634,7 +600,7 @@ Translated (${targetLang}):`;
     let currentTranslatedObj: any = originalParsedJson; // 初始化为原始解析对象，准备进行翻译
 
     while (globalAttempt < maxApiRetries) {
-      await this.throttle();
+      // await this.throttle();
 
       try {
         if (globalAttempt > 0) {
@@ -644,61 +610,28 @@ Translated (${targetLang}):`;
             }/${maxApiRetries} 次全局尝试翻译 JSON 片段：${jsonChunk.substring(
               0,
               50
-            )}... (使用密钥索引: ${this.currentKeyIndex})`
+            )}...`
           );
         }
 
-        const result = await this.ai.models.generateContent({
-          model: "gemini-2.0-flash-lite",
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: this.getTranslateSystemInstruction(
-                    jsonChunk,
-                    targetLang
-                  ),
-                },
-              ],
-            },
-          ],
-          config: {
-            temperature: 0.1,
-            responseMimeType: "application/json",
-            maxOutputTokens: 8192,
-            safetySettings: [
-              {
-                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-              },
-            ],
-          },
-        });
-
-        const responseText = result.text;
+        const prompt = this.getTranslateSystemInstruction(
+          jsonChunk,
+          targetLang
+        );
+        const responseText = await this.callTranslationAPI(prompt, 0.1, 8192);
 
         if (!responseText || responseText.trim() === "") {
           throw new Error("Gemini 返回了空响应或只有空白字符的响应。");
         }
 
-        console.log("Gemini 原始响应 (部分):", responseText.substring(0, 200));
-
         try {
-          // 尝试解析 Gemini 返回的 JSON
-          const aiTranslatedObj = JSON.parse(responseText);
+          // 清理markdown标记并解析 JSON
+          const cleanedResponse = this.cleanJsonResponse(responseText);
+          console.log(
+            "清理后的响应 (部分):",
+            cleanedResponse.substring(0, 400)
+          );
+          const aiTranslatedObj = JSON.parse(cleanedResponse);
           console.log("✅ 首次 JSON 解析成功。");
 
           // 验证并修复 JSON 结构，确保与原始结构保持一致
@@ -739,14 +672,9 @@ Translated (${targetLang}):`;
           finalTranslatedJson.substring(0, 200)
         );
 
-        this.saveProgress();
         return finalTranslatedJson; // 翻译成功！
       } catch (error: any) {
-        console.error(
-          `❌ 翻译失败 (密钥索引: ${this.currentKeyIndex}, 错误: ${
-            error.message || error
-          })`
-        );
+        console.error(`❌ 翻译失败 (错误: ${error.message || error})`);
 
         if (
           error.status === 429 ||
@@ -754,8 +682,8 @@ Translated (${targetLang}):`;
           error.message.includes("Quota exceeded") ||
           error.message.includes("RESOURCE_EXHAUSTED")
         ) {
-          console.warn("❗ 检测到 API 密钥或配额错误。正在切换密钥。");
-          this.switchToNextKey();
+          console.warn("❗ 检测到 API 密钥或配额错误。");
+          await new Promise((resolve) => setTimeout(resolve, 5000));
         } else {
           console.log(`❗ 非密钥错误，将在 ${2000 / 1000} 秒后重试...`);
           await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -774,4 +702,8 @@ Translated (${targetLang}):`;
   }
 }
 
-export const translator = new GeminiTranslator(API_KEYS);
+export const translator = new GeminiTranslator(
+  API_KEY,
+  API_ENDPOINT,
+  MODEL_NAME
+);

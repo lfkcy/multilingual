@@ -57,7 +57,7 @@ export async function run({
   const OSS_VERSIONED_LANG_DIR = `${OSS_LANG_DIR}${currentVersion}/`; // 上传版本目录 --- oss还并不存在
   const OSS_LATEST_LANG_DIR = `${OSS_LANG_DIR}${latestVersion}/`; // 当前 OSS 上已有的最新版本
   const OSS_CURRENT_LANG_DIR = `${OSS_LANG_DIR}current/`; // current 目录
-  const CHUNK_SIZE = 70; // 设置每个翻译批次的键数量阈值，例如500个键 --- 防止新增的key过于多导致json内容过于庞大
+  const CHUNK_SIZE = 50; // 设置每个翻译批次的键数量阈值，例如500个键 --- 防止新增的key过于多导致json内容过于庞大
 
   // --- 1. 获取基准 en.json 文件内容 ---
   let currentEnJsonContent: Record<string, any>;
