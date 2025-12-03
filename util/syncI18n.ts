@@ -164,7 +164,8 @@ export async function run({
 
   console.log(langs, "langs");
 
-  for (const lang of langs) {
+  // 定义单个语言的翻译处理函数
+  const processSingleLang = async (lang: string) => {
     const startTime = new Date();
     console.log(`\n🚀 开始同步 [${lang}] ${startTime.toLocaleString()}`);
 
@@ -280,6 +281,32 @@ export async function run({
 结束时间: ${endTime.toLocaleString()}
 耗时: ${(endTime.getTime() - startTime.getTime()) / 1000}s`
     );
+  };
+
+  // 并发翻译，每次最多处理5个语言
+  const CONCURRENT_LIMIT = 5;
+  const langChunks = chunkArray(langs, CONCURRENT_LIMIT);
+
+  console.log(
+    `\n📦 共 ${langs.length} 个语言，分为 ${langChunks.length} 批次，每批最多 ${CONCURRENT_LIMIT} 个语言并发翻译\n`
+  );
+
+  for (let i = 0; i < langChunks.length; i++) {
+    const chunk = langChunks[i];
+    console.log(
+      `\n🔄 开始处理第 ${i + 1}/${langChunks.length} 批次: [${chunk.join(
+        ", "
+      )}]`
+    );
+
+    try {
+      // 并发处理当前批次的所有语言
+      await Promise.all(chunk.map((lang) => processSingleLang(lang)));
+      console.log(`✅ 第 ${i + 1}/${langChunks.length} 批次处理完成\n`);
+    } catch (error) {
+      console.error(`❌ 第 ${i + 1}/${langChunks.length} 批次处理失败:`, error);
+      // 继续处理下一批次
+    }
   }
 
   // --- 6. 统一上传所有处理完成的语言文件 ---

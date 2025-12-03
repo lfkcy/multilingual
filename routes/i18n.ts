@@ -63,7 +63,7 @@ async function executeI18nSync(
 
     // 2. 直接在当前进程异步执行同步逻辑，并开启锁心跳
     console.log(`[${projectId}] 启动新的多语言同步任务...`);
-    const stopHeartbeat = startLockHeartbeat();
+    const stopHeartbeat = startLockHeartbeat(projectId || undefined);
     (async () => {
       try {
         await runI18nSync({
@@ -77,7 +77,7 @@ async function executeI18nSync(
         console.error(`[${projectId}] 多语言同步任务失败:`, e?.message || e);
       } finally {
         stopHeartbeat();
-        releaseLock();
+        releaseLock(projectId || undefined);
         // 释放锁后，处理队列中的下一个任务
         await processNextQueuedTask();
       }
@@ -89,7 +89,7 @@ async function executeI18nSync(
     };
   } catch (e: any) {
     // 如果发生错误，确保锁被释放
-    releaseLock();
+    releaseLock(projectId || undefined);
     return {
       code: 500,
       message: e?.message || "多语言同步任务提交失败",
@@ -338,7 +338,7 @@ router.post("/update-lang", apiKeyAuth, async (req: any, res: any) => {
       message: `${lang}.json 更新成功`,
     });
   } catch (e: any) {
-    releaseLock(); // 释放锁
+    releaseLock(projectId || undefined); // 释放锁
     res.status(500).json({
       code: 500,
       data: null,
@@ -497,7 +497,7 @@ async function processNextQueuedTask(): Promise<void> {
     }
 
     // 开启锁心跳
-    const stopHeartbeat = startLockHeartbeat();
+    const stopHeartbeat = startLockHeartbeat(nextTask.projectId);
 
     console.log(
       `projectId: ${nextTask.projectId},commitId:${nextTask.commitId} 开启翻译`
@@ -523,7 +523,7 @@ async function processNextQueuedTask(): Promise<void> {
       // 失败的任务不移除，可以稍后重试
     } finally {
       stopHeartbeat();
-      releaseLock();
+      releaseLock(nextTask.projectId);
 
       // 递归处理下一个任务
       setTimeout(() => {

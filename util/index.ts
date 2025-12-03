@@ -2,9 +2,18 @@ import fs from "fs";
 import path from "path";
 import { getProjectQueueStatus } from "./versioning";
 
-const LOCK_FILE = path.resolve(__dirname, "./sync_lock");
+const LOCK_DIR = path.resolve(__dirname, ".");
 const LOCK_TIMEOUT_MS = 1000 * 60 * 1; // 1分钟
 const LOCK_HEARTBEAT_INTERVAL_MS = 15 * 1000; // 心跳 15s
+
+/**
+ * 获取项目特定的锁文件路径
+ * @param projectId 项目ID
+ * @returns 锁文件路径
+ */
+function getLockFilePath(projectId: string): string {
+  return path.resolve(LOCK_DIR, `.sync_lock_${projectId}`);
+}
 
 // 项目锁信息接口
 interface ProjectLockInfo {
@@ -123,13 +132,14 @@ async function acquireLock(
   taskId?: string
 ): Promise<boolean> {
   return new Promise((resolve, reject) => {
+    const lockFile = getLockFilePath(projectId || "unknown");
     // 尝试以独占写入模式创建文件
-    fs.open(LOCK_FILE, "wx", async (err, fd) => {
+    fs.open(lockFile, "wx", async (err, fd) => {
       if (err) {
         if (err.code === "EEXIST") {
           // 锁文件已存在，检查是否超时
           try {
-            const lockContent = fs.readFileSync(LOCK_FILE, "utf-8");
+            const lockContent = fs.readFileSync(lockFile, "utf-8");
             let lockInfo: ProjectLockInfo;
 
             try {
@@ -140,9 +150,9 @@ async function acquireLock(
               const lockTimestamp = parseInt(lockContent, 10);
               if (isNaN(lockTimestamp)) {
                 console.warn(
-                  `⚠️ 锁文件内容无效，尝试强制删除并重新获取锁: ${LOCK_FILE}`
+                  `⚠️ 锁文件内容无效，尝试强制删除并重新获取锁: ${lockFile}`
                 );
-                releaseLock(); // 内容无效，尝试释放旧锁
+                releaseLock(projectId); // 内容无效，尝试释放旧锁
                 return resolve(await acquireLock(projectId, taskId)); // 递归重试
               }
 
@@ -159,9 +169,9 @@ async function acquireLock(
               console.warn(
                 `⚠️ 锁文件已超时 (${
                   (currentTime - lockInfo.timestamp) / 1000
-                }s)，强制删除并重新获取锁: ${LOCK_FILE}`
+                }s)，强制删除并重新获取锁: ${lockFile}`
               );
-              releaseLock(); // 锁超时，强制释放
+              releaseLock(projectId); // 锁超时，强制释放
               return resolve(await acquireLock(projectId, taskId)); // 递归重试获取锁
             } else {
               // 锁未超时，获取锁失败
@@ -191,7 +201,7 @@ async function acquireLock(
         });
         if (writeErr) {
           console.error(`写入锁文件时间戳时发生错误: ${writeErr.message}`);
-          releaseLock(); // 写入失败，释放锁
+          releaseLock(projectId); // 写入失败，释放锁
           return reject(writeErr);
         }
         resolve(true); // 成功获取锁
@@ -202,15 +212,17 @@ async function acquireLock(
 
 /**
  * 释放文件锁
+ * @param projectId 项目ID
  */
-function releaseLock(): void {
+function releaseLock(projectId?: string): void {
   try {
-    if (fs.existsSync(LOCK_FILE)) {
-      fs.unlinkSync(LOCK_FILE); // 删除锁文件
-      console.log("文件锁已释放。");
+    const lockFile = getLockFilePath(projectId || "unknown");
+    if (fs.existsSync(lockFile)) {
+      fs.unlinkSync(lockFile); // 删除锁文件
+      console.log(`[${projectId}] 文件锁已释放。`);
     }
   } catch (err) {
-    console.error("释放文件锁时发生错误:", err);
+    console.error(`[${projectId}] 释放文件锁时发生错误:`, err);
   }
 }
 
@@ -220,8 +232,9 @@ function releaseLock(): void {
  */
 function isLockActive(projectId?: string): boolean {
   try {
-    if (!fs.existsSync(LOCK_FILE)) return false;
-    const content = fs.readFileSync(LOCK_FILE, "utf-8");
+    const lockFile = getLockFilePath(projectId || "unknown");
+    if (!fs.existsSync(lockFile)) return false;
+    const content = fs.readFileSync(lockFile, "utf-8");
 
     let lockInfo: ProjectLockInfo;
     try {
@@ -257,12 +270,14 @@ function isLockActive(projectId?: string): boolean {
 
 /**
  * 刷新锁文件时间戳（用于心跳续租）。
+ * @param projectId 项目ID
  */
-function refreshLockTimestamp(): void {
+function refreshLockTimestamp(projectId?: string): void {
   try {
-    if (!fs.existsSync(LOCK_FILE)) return;
+    const lockFile = getLockFilePath(projectId || "unknown");
+    if (!fs.existsSync(lockFile)) return;
 
-    const content = fs.readFileSync(LOCK_FILE, "utf-8");
+    const content = fs.readFileSync(lockFile, "utf-8");
     let lockInfo: ProjectLockInfo;
 
     try {
@@ -284,7 +299,7 @@ function refreshLockTimestamp(): void {
     // 更新时间戳
     lockInfo.timestamp = Date.now();
     const updatedContent = JSON.stringify(lockInfo);
-    fs.writeFileSync(LOCK_FILE, updatedContent, { encoding: "utf-8" });
+    fs.writeFileSync(lockFile, updatedContent, { encoding: "utf-8" });
   } catch (err) {
     console.error("刷新锁文件时间戳失败:", (err as any)?.message || err);
   }
@@ -292,10 +307,11 @@ function refreshLockTimestamp(): void {
 
 /**
  * 启动锁心跳，返回一个停止函数，调用后停止心跳。
+ * @param projectId 项目ID
  */
-function startLockHeartbeat(): () => void {
+function startLockHeartbeat(projectId?: string): () => void {
   const timer = setInterval(() => {
-    refreshLockTimestamp();
+    refreshLockTimestamp(projectId);
   }, LOCK_HEARTBEAT_INTERVAL_MS);
   // 避免阻止进程退出
   if ((timer as any).unref) {
@@ -321,11 +337,12 @@ async function getProjectSyncStatus(projectId: string): Promise<{
 
     if (lockActive) {
       // 项目正在处理中
-      if (!fs.existsSync(LOCK_FILE)) {
+      const lockFile = getLockFilePath(projectId);
+      if (!fs.existsSync(lockFile)) {
         return { isAsyncing: false, status: "idle" };
       }
 
-      const content = fs.readFileSync(LOCK_FILE, "utf-8");
+      const content = fs.readFileSync(lockFile, "utf-8");
       let lockInfo: ProjectLockInfo;
 
       try {
