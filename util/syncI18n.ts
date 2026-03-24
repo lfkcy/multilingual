@@ -162,6 +162,20 @@ export async function run({
 
   const langs = langFiles.map((f) => f.replace(/\.json$/, "")); // 获取所有语言文件名
 
+  // 将语言文件名映射为更清晰的目标语言描述，避免模型误判（例如 tw 被当作 Twi）
+  const getTargetLangForModel = (lang: string): string => {
+    switch (lang) {
+      case "tw":
+        // 明确指定为台湾繁体中文，而不是 ISO 639-1 的 Twi 语言
+        return "Traditional Chinese (Taiwan)";
+      case "zh":
+        // 这里根据你的实际需求调整，如果 zh 表示简体中文，可以写清楚
+        return "Simplified Chinese";
+      default:
+        return lang;
+    }
+  };
+
   console.log(langs, "langs");
 
   // 定义单个语言的翻译处理函数
@@ -241,7 +255,7 @@ export async function run({
           const translatedJsonString =
             await translator.translateSingleJsonChunk(
               JSON.stringify(jsonToTranslate, null, 2),
-              lang
+              getTargetLangForModel(lang)
             );
           const translatedFlatJson = JSON.parse(translatedJsonString);
 
@@ -284,7 +298,7 @@ export async function run({
   };
 
   // 并发翻译，每次最多处理5个语言
-  const CONCURRENT_LIMIT = 5;
+  const CONCURRENT_LIMIT = 17;
   const langChunks = chunkArray(langs, CONCURRENT_LIMIT);
 
   console.log(
